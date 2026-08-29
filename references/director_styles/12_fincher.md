@@ -135,7 +135,7 @@ negative_prompt_adds: [handheld drift, camera shake, lens flare, crushed pure bl
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 风格锁定：芬奇式外科控制。
@@ -151,13 +151,13 @@ negative_prompt_adds: [handheld drift, camera shake, lens flare, crushed pure bl
 结尾：反高潮，留一个未闭合的事实。禁止手持、禁止光晕、禁止压死黑、禁止雾。
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 Locked frame with zero breathing, or an imperceptible push-in of four percent of frame width over the whole clip on a mechanical dolly. 85mm equivalent at f/2.2, exact eye level, shot from a surveillance position <behind glass / from the far end of the corridor>; the background is compressed into unreadable soft colour blocks. The subject performs one professional micro-action: <aligns the object square to the edge / wipes it once / turns a page>, with small emotional amplitude and no look toward camera. A single practical source lights the scene — <a desk lamp camera-left / a monitor / a corridor sconce> — key ratio 5:1; shadows stay teal-green with readable texture, blacks lifted, air completely clean with no haze. End on the subject still, holding for a beat after the action completes. Maintain the low-saturation teal-and-amber palette, the fine film grain, the same face, clothing, and object. Avoid handheld drift, camera shake, lens flare, crushed black, warm glow, atmospheric haze, bokeh balls, wide-angle distortion.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 135mm-equivalent frame at f/2.2, exact eye level, shot from the far end of a corridor so the subject is isolated and the background compresses into unreadable soft colour blocks. Subject placed on the right third, dead space left of them. Exact horizontal and vertical alignment, no wide-angle distortion, no tilt. Lighting from one practical source only, a wall sconce camera-left, key ratio 5:1; shadows read teal-green with visible texture, blacks lifted, no crushed black, air perfectly clean with no haze or light shafts. Palette teal-green shadow, desaturated charcoal, cold grey, with one amber practical as the only warm accent and a single natural skin tone. Low saturation, low contrast, fine film grain. 2.39:1. No text, no watermark, no lens flare, no bokeh balls, no warm romantic glow, no fog.

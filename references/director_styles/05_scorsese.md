@@ -135,7 +135,7 @@ negative_prompt_adds: ["handheld jitter", "aimless floating camera", "slow motio
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 用斯科塞斯镜头设计以下场景：<一句话事件>
@@ -151,7 +151,7 @@ negative_prompt_adds: ["handheld jitter", "aimless floating camera", "slow motio
 输出：分镜表 + 音乐切点表 + 上升/坠落两版同机位对照
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 [27mm], eye level at 1.55m, steadicam tracking that starts slow, accelerates, and stops hard on [named endpoint composition].
@@ -162,7 +162,7 @@ End with the camera locked on [exact final framing]. Maintain [face, costume, pr
 Avoid: handheld jitter, aimless floating camera, slow motion, empty background, even lighting, text, watermark.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 [Medium tracking frame | close-up], 27mm-equivalent, eye level, subject centred with the room streaming past behind.

@@ -138,7 +138,7 @@ negative_prompt_adds: ["smiling", "exaggerated expression", "comic reaction face
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 风格锁定：科恩兄弟式冷面几何黑色喜剧。
@@ -156,13 +156,13 @@ negative_prompt_adds: ["smiling", "exaggerated expression", "comic reaction face
 输出：分镜表（编号 / 时长 / 景别 / 焦段 / 机位高度 / 运动 / 头后物件 / 死寂时长 / 连续性锚点）
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 Dead-frontal locked camera, absolutely no movement, 27mm equivalent, eye level at 1.6 metres, the subject exactly centred with <a door / a window / a sign> directly behind the head. Symmetrical composition, wide enough that both the ceiling and the floor are visible. The subject performs one small, over-committed action: <squares the object with both hands / straightens the form / adjusts the object and then adjusts it again>, executed with complete seriousness. Expression completely neutral throughout — no smile, no eyebrow movement, no reaction, no acknowledgement that anything is amusing. After the action he simply remains standing there, not moving, for the rest of the clip. Overhead fluorescent light as the only source, shadow in both eye sockets, ratio 3:1, unflattering, no fill, no hair light. Palette institutional beige and fluorescent green-white with one <mustard yellow> accent. Keep the same face, coat, object and symmetrical framing. Avoid: smiling, exaggerated expression, comic reaction face, handheld shake, shallow depth of field, warm romantic light, slow motion, dynamic pose.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 Dead-frontal symmetrical frame, 27mm equivalent, camera at eye level, subject exactly centred, shoulders square to the lens, background flat and institutional. Directly behind the subject's head sits <a door / a window / a wall sign>, centred like a halo. Wide enough that both ceiling and floor are in frame; straight lines stay straight. Overhead fluorescent tubes are the only source: hard top light putting distinct shadow in both eye sockets, no fill, no rim, ratio 3:1, deliberately unflattering. Expression completely neutral — not smiling, not reacting, playing the moment with total sincerity. Palette institutional beige, fluorescent green-white, motel brown, with one accent of <mustard yellow / blood red>. Mid saturation, mid contrast — hard top light but the shadows stay grey and open, not black, because the institutional walls bounce. Deep focus, everything sharp. Ordinary, slightly ugly real-world detail: scuffed skirting, a taped notice, a worn floor. 1.85:1. No text overlay, no watermark, no shallow depth of field, no warm romantic light, no comic expression, no dynamic action pose.

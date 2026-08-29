@@ -138,7 +138,7 @@ negative_prompt_adds: ["fog", "volumetric light beams", "rain-slick streets", "u
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 风格锁定：迈克尔·曼式都市夜。
@@ -156,13 +156,13 @@ negative_prompt_adds: ["fog", "volumetric light beams", "rain-slick streets", "u
 输出：分镜表（编号 / 时长 / 景别 / 焦段 / 机位距离 / 运动 / 光源名单 / 色温对抗 / 连续性锚点）
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 Locked wide, 25mm equivalent, camera at eye level with the lens axis level, positioned about <15> metres from the subject; the city skyline sits at eye level behind him and the standing figure is only about an eighth of the frame height. Night. Light comes only from real municipal sources: <sodium street lamps camera-left, warm orange>, <mercury-vapour parking lights camera-right, blue-green>, <white LED office floors in the far background>. Mixed colour temperature within the single frame — do not unify the white balance. The subject's face sits about two stops under the practicals and is partly unreadable; shadows are genuinely black with visible sensor noise in them. He performs one procedural action: <checks the time / seats the connector / closes the case>, precisely, without hesitation, then holds still. In the background, traffic moves continuously on an elevated road. Pavement is dry. Keep the same coat, equipment, skyline and the sodium-and-mercury palette. Avoid: fog, volumetric light beams, rain-slick streets, unified colour grade, lens flare, warm cozy lighting, background crowds, slow motion.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 Night exterior, 25mm-equivalent wide, camera at eye level, lens axis level, subject about 20 metres away, the standing figure only about a tenth of the frame height. A city skyline runs across the frame at eye height behind him; large negative space to one side. Lighting comes only from real municipal sources, mixed within one frame: sodium street lamps casting warm orange from the left, mercury-vapour lights casting blue-green from the right, white LED office windows in the far background, one red taillight. High contrast, ratio about 8:1, the face one and a half to two stops under the brightest practicals and partly unreadable; the shadows are true black with visible high-ISO chroma noise, not lifted. Dry pavement, no fog, no beams, no rain. Palette sodium amber, mercury blue-green, LED cyan-white, black, with taillight red as the only accent. Mid saturation, high contrast. 2.39:1. No text, no watermark, no lens flare, no volumetric light, no crowd, no unified colour grade.

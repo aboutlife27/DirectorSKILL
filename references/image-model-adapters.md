@@ -1,6 +1,6 @@
 # Image Model Adapters (Keyframes and Stills)
 
-Load this file when the task produces stills — keyframes（关键帧）, storyboard panels, first/last-frame pairs（首尾帧）, character or location reference sheets — or when generated stills drift in face, wardrobe, set, or light. This is Step 8 (Keyframe strategy) of the pipeline and the engine behind Mode E, whose emittable form is [keyframe-prompt-template.md](../assets/keyframe-prompt-template.md).
+Load this file when the task produces stills — keyframes（关键帧）, storyboard panels, first/last-frame pairs（首尾帧）, character or location reference sheets — or when generated stills drift in face, wardrobe, set, or light. This is Step 10 (Keyframe strategy) of the pipeline and the engine behind Mode E, whose emittable form is [keyframe-prompt-template.md](../assets/keyframe-prompt-template.md).
 
 **Staleness warning, before anything else.** The control-surface matrix in §2 describes capability *classes as of writing*, not a live feature list. Vendors ship, rename, and remove controls constantly, a family's base model and its editing model behave nothing alike, and the same model exposes different knobs in a web UI, an app, and an API. Nothing in that table is a fact you can quote to a client — verify against current documentation before you promise a user a control.
 

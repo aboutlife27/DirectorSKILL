@@ -134,7 +134,7 @@ negative_prompt_adds: [saturated colors, hard-edged shadows, lens flare, fast ca
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 风格锁定：塔可夫斯基式诗意时间。
@@ -150,13 +150,13 @@ negative_prompt_adds: [saturated colors, hard-edged shadows, lens flare, fast ca
 结尾：一个不解释的动作。禁止反转、禁止解释、禁止音乐煽情。
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 Locked camera, or an extremely slow constant-speed lateral dolly of no more than one metre across the whole clip, no acceleration. Waist-height framing, 35mm equivalent, deep focus so the wet foreground and the far door are both sharp. The figure starts <state>, then makes one minimal action: <breath / turn of the head / setting one object down>, at half the speed of real life. Throughout, water drips steadily from the ceiling into a shallow pool in the foreground and thin steam drifts across the frame from camera-left. Overcast window light, 2.5:1, no hard shadows; a single small flame off to one side flickers on the wet wall. End with the figure still in frame, unmoving, the water still dripping. Maintain the mud-brown and moss-green low-saturation palette, the wet stone texture, the same face and clothing. Avoid saturated color, hard-edged shadows, lens flare, fast camera movement, glossy clean surfaces, orchestral music.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 35mm-equivalent deep-focus frame, waist-height eye line, three distinct depth planes. Foreground: a shallow pool of standing water on a cracked floor, reflecting the ceiling. Middle: a figure standing three-quarters away from camera, off-center to the right, only the back of the neck and one shoulder readable. Background: a half-open door onto a dim, damp room. Overcast daylight through a tall window, key ratio 2.5:1, no hard shadow edges; one small flame on a ledge camera-left. Palette mud brown, wet stone grey, moss green, sepia, low saturation, low contrast, textures dominant: peeling plaster, soaked wood, rust. 1.66:1. No text, no watermark, no plastic, no printed labels, no lens flare, no symmetrical stage composition.

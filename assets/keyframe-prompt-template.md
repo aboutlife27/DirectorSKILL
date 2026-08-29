@@ -1,6 +1,6 @@
 # Keyframe Prompt Template (Mode E)
 
-Load this file when you are at Step 8 (keyframe strategy) or the user asked for Mode E — first
+Load this file when you are at Step 10 (keyframe strategy) or the user asked for Mode E — first
 frames, last frames, storyboard panels, character sheets, or location plates. The nine-slot order
 and the reasoning behind it are owned by
 [image model adapters](../references/image-model-adapters.md) §3, together with model control

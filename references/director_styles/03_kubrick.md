@@ -134,7 +134,7 @@ negative_prompt_adds: ["handheld shake", "camera orbit", "ease-in ease-out camer
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 用库布里克镜头设计以下场景：<一句话事件>
@@ -149,7 +149,7 @@ negative_prompt_adds: ["handheld shake", "camera orbit", "ease-in ease-out camer
 输出：分镜表 + 每镜的消失点坐标与运动速度
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 [18mm | 25mm], dead-centre symmetrical composition, one-point perspective with the vanishing point at frame centre.
@@ -161,7 +161,7 @@ Maintain the vanishing point, the geometric floor/wall pattern, the cold white p
 Avoid: handheld shake, camera orbit, ease-in ease-out, reframing, warm fill, shallow depth of field, text, watermark.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 [Symmetrical wide | frontal medium], 18mm-equivalent, camera height [1.5m | 0.6m], one-point perspective.

@@ -17,7 +17,7 @@ Repair-note format, one per failed shot:
 Shot 07 — F5 (no end state), 2nd generation
 Cause: prompt ends on "walks toward the door", no terminal pose; clip ran 8 s for a 3 s action.
 Fix applied: L1 add end state + L2 duration 8 s -> 4 s.
-Prevention: Step 6 blocking row lacked an end position.
+Prevention: Step 8 blocking row lacked an end position.
 ```
 
 When one clip carries more than one code, use the multi-failure form instead. The ordering rule is: diagnose the codes independently, then find the single upstream decision that produced them all — usually duration, shot size, or an over-scoped action — and fix that before you touch any symptom. Fixing symptoms one at a time re-spends the same generation on the same root.
@@ -35,7 +35,7 @@ Fix applied: split into three shots of 3–4 s, one prompt each (see below); no 
   07c reaction, 4 s
 Parameters: motion strength one step down on 07b; seed locked across all three.
 Cut notes: the occlusion falls between 07b and 07c, so the disappearance becomes an edit.
-Prevention: Step 7 let one row carry a face, a hand action, and an occlusion at 8 s.
+Prevention: Step 9 let one row carry a face, a hand action, and an occlusion at 8 s.
 ```
 
 ## 60-second triage tree

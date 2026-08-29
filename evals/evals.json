@@ -1,7 +1,7 @@
 {
   "skill_name": "cinematic-director",
-  "version": "2.0.0",
-  "notes": "Behavior contract for the cinematic-director skill. Each case carries `mode` (the A-J output mode the request should trigger), `loads` (repo-relative reference/asset files the response should have consulted), and `assertions` (4-6 independently checkable claims about the response text, never about hidden reasoning). Every style-overlay case includes a copyright-safety assertion.",
+  "version": "2.3.0",
+  "notes": "Behavior contract for the cinematic-director skill. Each case carries `mode` (the A-K output mode the request should trigger), `loads` (repo-relative reference/asset files the response should have consulted), and `assertions` (4-6 independently checkable claims about the response text, never about hidden reasoning). Every style-overlay case includes a copyright-safety assertion.",
   "evals": [
     {
       "id": "rain-street-image-to-video",
@@ -540,6 +540,119 @@
         "At least one shot holds long enough that the discomfort becomes the beat, with a duration stated in seconds.",
         "The outcome reads as indifferent fate rather than as a character victory or defeat.",
         "The output does not copy specific shots, characters, or dialogue from any actual Coen Brothers film."
+      ]
+    },
+    {
+      "id": "automatic-direction-family-dinner",
+      "mode": "D",
+      "loads": [
+        "references/story-to-visual-compiler.md",
+        "assets/beat-sheet-template.md",
+        "assets/director-book-template.md",
+        "assets/shot-plan-template.md"
+      ],
+      "prompt": "一场两分钟的现实主义家庭戏：多年未归的女儿深夜回家吃面，父亲一直问路上冷不冷，直到她从包里拿出癌症诊断书。请自动决定分镜、色调、镜头和声音，不指定导演。",
+      "expected_output": "一个以剧情证据为依据的唯一导演方案，明确场景原型、置信度、观众关系、视觉规则及可执行分镜，不自动选择具名导演。",
+      "assertions": [
+        "输出明确一个首选场景原型，并给出最高候选与第二候选的置信度分差。",
+        "输出列出至少三条决定性剧情证据，包含转折、视点或信息差中的至少两项。",
+        "色彩、焦段和摄影机行为都能追溯到剧情证据，而不是仅由现实主义类型默认决定。",
+        "只给一个可执行首选方案，不在中高置信度时要求用户从多套风格中选择。",
+        "不自动指定或模仿任何具名导演。"
+      ]
+    },
+    {
+      "id": "feature-film-visual-arc",
+      "mode": "C",
+      "loads": [
+        "references/story-to-visual-compiler.md",
+        "references/film-consistency-system.md",
+        "assets/film-visual-constitution.yaml",
+        "assets/project-state-template.json"
+      ],
+      "prompt": "为一部90分钟近未来悬疑片规划整体视觉系统。六个关键段落依次是秩序建立、第一次怀疑、追查、错误胜利、身份真相、代价与余波。请自动确定每段的构图、镜头尺度、焦段、运动、光线、色彩和剪辑变化，并保证是一部电影。",
+      "expected_output": "一个由不可变核心、五段视觉弧、六个段落合同和受控破例组成的长片视觉系统，所有变化可追溯且可写入项目状态。",
+      "assertions": [
+        "先声明画幅、基础焦段族、相机支撑、颜色角色、光线逻辑等不可变核心。",
+        "镜头尺度、运动、对比、饱和度、声音密度和平均镜头长度沿全片形成连续趋势。",
+        "六段分别标明弧位置及其继承值与相对变化，而不是六套独立风格。",
+        "重大风格破例包含理由、作用范围和恢复点，并受每幕预算限制。",
+        "说明已验收镜头的 observed_end 如何成为下一镜头的真实起点。"
+      ]
+    },
+    {
+      "id": "multiple-director-reference-conflict",
+      "mode": "D",
+      "loads": [
+        "references/story-to-visual-compiler.md",
+        "references/film-consistency-system.md",
+        "assets/shot-plan-template.md"
+      ],
+      "prompt": "拍一场8分钟审讯戏：审讯者表面占优，嫌疑人实际掌握关键秘密；中段权力翻转，但观众应比审讯者早十秒意识到。用户另外说想要王家卫的颜色、芬奇的机位、库布里克的构图。请给出可执行分镜并保持整片统一。",
+      "expected_output": "以审讯为首选原型、揭示为次要机制的唯一方案，将导演姓名转译为功能方法并只保留与剧情证据和视觉宪法兼容的部分。",
+      "assertions": [
+        "首选决策使用场景原型和剧情证据命名，不把任何导演姓名设为整片主风格。",
+        "明确设计观众早十秒知情的可见或可听载体及精确时间点。",
+        "颜色、机位和构图请求被转译为功能规则，并说明至少一个被拒绝的冲突手法。",
+        "权力翻转通过构图、清晰度、尺度或空间控制的可追踪变化完成。",
+        "所有局部选择继承同一视觉宪法，或登记为有恢复点的破例。"
+      ]
+    },
+    {
+      "id": "hell-grind-workflow-audit",
+      "mode": "any",
+      "loads": [
+        "references/hell-grind-workflow.md"
+      ],
+      "prompt": "重新核对《Hell Grind》公开的 AI 长片工作流。请区分确认事实、项目方自述、外部评价和未知项，并说明哪些机制值得迁移、哪些数字不能照搬。",
+      "expected_output": "一份带来源等级的案例审计，准确限定 14 天、戛纳电影市场和 open-sourced 的口径，并把资产、GEO、提示骨架、迭代与后期机制抽象为可验证做法。",
+      "assertions": [
+        "把 14 天限定为资产准备之后、后期之前的集中生成窗口，不写成端到端制作周期。",
+        "区分 Marché du Film 与戛纳电影节官方单元，不把前者写成后者的入选证明。",
+        "不把公开下载自动解释为已有明确开源许可证。",
+        "列出固定资产描述、状态资产、GEO 空间常量、15 段提示骨架和单变量迭代等已公开机制。",
+        "把团队、成本、迭代量和效率数据标为项目方或利益相关方自述，除非有独立账本。",
+        "明确列出至少三项不应直接照搬的局部参数或供应商绑定。"
+      ]
+    },
+    {
+      "id": "feature-film-production-runbook",
+      "mode": "A–J",
+      "loads": [
+        "references/ai-feature-production-playbook.md",
+        "assets/ai-feature-production-runbook.yaml",
+        "references/story-to-visual-compiler.md",
+        "references/film-consistency-system.md",
+        "assets/project-state-template.json"
+      ],
+      "prompt": "我有一部长片剧本和两周 AI 视频生成窗口。请自动决定每场的分镜、色调与拍摄手法，给出团队能直接执行的生产工作流，并保证 60 场像同一部电影。",
+      "expected_output": "一份带阶段门、回滚、证据和机器可读状态的长片运行方案；自动导演选择由剧情证据驱动，并由全片视觉宪法和已验收成片状态约束。",
+      "assertions": [
+        "先用代表场景容量实验限定交付；阶段 0-5 在两周集中生成窗口前完成，生成日历从首镜证明开始。",
+        "自动选择按观众关系、调度、覆盖、焦段、相机、光色和声音顺序编译，并给唯一首选和置信度。",
+        "关键资产在批量生产前经过跨姿态、光线、角度和同框组合压力测试，并有明确门槛。",
+        "每阶段包含触发、判定、约束、执行、观测、回滚、阶段门和产物。",
+        "每次迭代只改一个主要变量；连续 10-15 次失败后改镜头设计而不是继续堆提示词。",
+        "下一镜头从上一镜已验收实际终点继承，并通过版本资产、破例恢复点和连续环境声保持全片一致。"
+      ]
+    },
+    {
+      "id": "codex-production-control",
+      "mode": "K",
+      "loads": [
+        "references/production-control-plane.md",
+        "assets/production-plan-template.json",
+        "references/ai-feature-production-playbook.md"
+      ],
+      "prompt": "把这部长片按一键制片系统启动起来。先由你调用模型执行，但不要假装可以无人值守；到了重要方向门让我批准。",
+      "expected_output": "建立本地制片项目和可校验任务图，由 Codex 按 JSON 任务包调用模型并回填，严格停在四个人工审批门，所有版本、输入和恢复操作可追溯。",
+      "assertions": [
+        "先登记剧本与已有资产，再从模板编译项目专用任务图，不直接跳到批量视频生成。",
+        "执行循环明确包含 next、模型调用、submit、review 和 status，并记录实际模型、提示词、种子与参数。",
+        "视觉宪法、核心资产、样片镜头和画面锁定四个门均明确由用户批准，Codex 不代替用户过门。",
+        "模型按任务能力和输出合同选择，不把控制内核绑定到单一供应商。",
+        "说明上游接受版本变化会使审批门和下游任务失效，并用 retry 重算。",
+        "说明中断后先 recover，只有四门与所有任务完成后才能 export。"
       ]
     }
   ]

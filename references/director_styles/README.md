@@ -1,8 +1,8 @@
 # Director Style Modules
 
-Style overlays used by the main `cinematic-director` skill. Each file is a coherent lens — narrative tendencies, camera grammar, lens kit, lighting, palette, editing rhythm, sound, performance, a machine-readable parameter block, a transferable shot checklist, prompt templates, and a worked example — that overrides defaults in the main workflow when the user asks for an "in the style of X" treatment.
+Style references used by the main `cinematic-director` skill. Each file records transferable narrative and visual methods. The main workflow may borrow only the functions that fit the scene evidence and the film constitution; a named director never becomes a global override.
 
-These are **reference modules**, not standalone skills. The host agent never loads them on its own. The main skill pulls exactly one in at Step 4 (Style lens selection) when a style is named.
+These are **reference modules**, not standalone skills. The host agent never loads them on its own. The main skill may pull one in at Step 6（可选风格功能参考）when a style is named.
 
 > Usage rule: these files describe high-level methods only. Do not copy specific shots, lines, characters, plots, or other copyrighted expression from any director's actual films. Use them to inform original work.
 
@@ -48,7 +48,7 @@ Every module follows the same section order, so switching lenses is a diff and a
 ## 人物与表演
 ## 风格参数 / Style parameters                # machine-readable YAML override block
 ## 可迁移拍摄清单                              # 6-8 checkable imperatives
-## 提示词模板 / Prompt templates               # 中文 brief (Steps 5/7) + EN i2v (Step 10) + EN keyframe (Step 8)
+## 提示词模板 / Prompt templates               # 中文 brief（Steps 7/9）+ EN keyframe（Step 10）+ EN i2v（Step 12）
 ## 落地示例 / Worked example                   # the shared control scene, this lens
 ```
 
@@ -61,29 +61,29 @@ Every module ends by directing the **same** control scene — a person stands at
 
 ## See it in action
 
-[example_comparisons.md](example_comparisons.md) takes a single scene and treats it under eight lenses back to back, with a matrix of what each one changes and a "choosing a lens" table covering all twenty. Load it at Step 4 whenever a lens has to be chosen — the user named two directors, or named none and wants to see what an overlay concretely buys. Every figure in it is quoted from a module; where they disagree, the module wins.
+[example_comparisons.md](example_comparisons.md) takes a single scene and treats it under eight lenses back to back, with a matrix of what each one changes and a "choosing a lens" table covering all twenty. Load it at Step 6 only when the user requests a named reference or a functional comparison. The comparison is advisory; the story evidence and film constitution always win.
 
 ## How the main skill uses these
 
 1. The user names a director or asks for "in the style of X" — or supplies one via `project.director_style` in the intake schema.
-2. The main skill loads exactly one file and applies its `风格参数` block as the override set for:
-   - Step 5 (Director's book): lens policy, camera grammar, lighting, palette, editing rhythm, sound, performance
-   - Step 7 (Shot list): preferred shot families, camera moves, average shot length, aspect bias
-   - Step 8 (Keyframe strategy): palette, key ratio, composition patterns, negative-prompt additions — every module ships a `Keyframe / still prompt` template, and the still is where the lens is actually fixed
-   - Step 10 (AI video prompt construction): prompt bias, clip duration, negative-prompt additions
-3. Precedence is **director lens > genre playbook > project tone > skill defaults**.
+2. The main skill loads at most one file and translates only compatible methods into functional constraints for:
+   - Step 7（导演本）：镜头政策、相机语法、灯光、色彩、剪辑、声音与表演
+   - Step 9（镜头表）：镜头族、运动、平均镜长与画幅改写
+   - Step 10（关键帧）：色彩角色、光比、构图和负向约束
+   - Step 12（AI 视频提示）：运动描述、片段长度和负向约束
+3. 优先级固定为 **戏剧证据 > 视觉宪法 > 全片弧线 > 场景原型 > 用户指定的功能性参考 > 类型惯例 > 默认值**。
 4. If no director is named, the main skill uses [../genre-playbooks.md](../genre-playbooks.md) and the project's own tone.
 
-Only one style is active at a time. If a user names two, pick the one that better serves the scene's dramatic core, say so in one line, and note what the other would have changed — [example_comparisons.md](example_comparisons.md) exists to make that comparison in one read.
+同一场最多读取一个风格文件，但只提取能服务戏剧功能的做法。若用户点名多个导演，先说明每个名字对应的功能，再选择与当前场景证据最一致的一组方法；不得拼贴签名画面，也不得突破视觉宪法。
 
 ## Adding a new style
 
-Create `NN_<slug>.md` in this directory using the section structure above, with a complete `风格参数` YAML block and the shared worked-example scene. Then register it in `SKILL.md` (frontmatter description, intake enum, Step 4 list), the table above, and the top-level `README.md` tables. Add an eval case that proves the overlay changes camera, palette, pacing, or sound versus the unstyled baseline, plus a copyright-safety assertion. Full instructions: [../../CONTRIBUTING.md](../../CONTRIBUTING.md).
+Create `NN_<slug>.md` in this directory using the section structure above, with a complete `风格参数` YAML block and the shared worked-example scene. Then register it in `SKILL.md`（Step 6）, the table above, and the top-level `README.md` tables. Add an eval case that proves the functional reference changes camera, palette, pacing, or sound without overriding story evidence or the film constitution, plus a copyright-safety assertion. Full instructions: [../../CONTRIBUTING.md](../../CONTRIBUTING.md).
 
 The numbered prefix controls sort order; pick the next available number.
 
 Three conventions the twenty existing modules already follow, so a new one does not have to be special-cased:
 
 - **`S` is reserved.** `S1`–`S4` mean the four prompt shapes in [../ai-video-tool-adapters.md](../ai-video-tool-adapters.md) and nothing else. Number the shots in a worked example `SH1`, `SH2`, … and any generation chain `CH1`, `CH2`, …
-- **Keep the three prompt-template labels verbatim** — `镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：`, `Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：`, `Keyframe / still prompt（英文，用于 Step 8，接图像模型）：` — so a reader can tell at a glance which pipeline step each block feeds.
+- **Keep the three prompt-template labels verbatim** — `镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：`, `Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：`, `Keyframe / still prompt（英文，用于 Step 10，接图像模型）：` — so a reader can tell at a glance which pipeline step each block feeds.
 - **Restate the composition rule for 9:16 where the signature depends on a wide frame.** If the lens leans on lateral ranks, extreme lateral symmetry, or a figure sized as a percentage of frame height at distance, add one bullet at the end of `镜头语言` beginning `竖幅（9:16）改写：` saying what the rule becomes vertically — never that it is abandoned — and point the `aspect_bias` line at it with a comment. Modules 04, 06, 11, 15, 16 and 19 carry one; the rest do not need it. The general vertical grammar is owned by [../cinematic-language.md](../cinematic-language.md).

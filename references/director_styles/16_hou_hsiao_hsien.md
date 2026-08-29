@@ -139,7 +139,7 @@ negative_prompt_adds: ["camera push-in or zoom", "handheld shake", "close-up", "
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 风格锁定：侯孝贤式固定远观长镜。
@@ -156,13 +156,13 @@ negative_prompt_adds: ["camera push-in or zoom", "handheld shake", "close-up", "
 输出：分镜表（编号 / 时长 / 景别 / 焦段 / 机位距离 / 门框位置 / 三层内容 / 声床 / 连续性锚点）
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 Locked camera on a tripod, no movement of any kind: no push-in, no zoom, no reframe. 50mm equivalent, camera about <9> metres from the subject, at seated eye height, positioned inside an adjacent room so that a doorframe crops the outer quarter of the frame on both sides. Focused deep, at the f/8 hyperfocal distance, so everything from about five metres back to the far doorway is sharp; the doorframe in the near foreground stays a dark, slightly soft mask and is not meant to carry detail. Foreground: <a small continuous activity>. Middle ground: <the main figures, doing an ordinary task, small in frame>. Background: <a further doorway or street where something continues to move>. Over the clip, the only changes are ordinary: <person A finishes the task and sets it down>, <person B crosses the far doorway and does not return>, a ceiling fan turns, steam rises from a cup, a curtain moves in the draught. Daylight from the doorway is the only key, interior about one and a half stops under, 3:1, no hard shadows, nobody is relit. Full location sound bed. Keep the same faces, clothing, room, and light. Avoid: camera push-in, zoom, handheld shake, close-up, shallow depth of field, dramatic lighting, music, slow motion.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 Static wide frame photographed from inside an adjacent room, 50mm equivalent, camera at seated eye height about 9 metres back; a doorframe crops the left and right quarters of the image, placing the viewer outside the room. Focused at the f/8 hyperfocal distance: everything from about five metres back is sharp, while the near doorframe reads as a dark, slightly soft mask. Three distinct planes: foreground <object or activity at the threshold>, middle <two or three people doing ordinary tasks, none looking at camera, none centred>, background <a further doorway onto a courtyard or street>. Daylight from the doorway is the only source; the interior sits one to two stops darker, ratio 3:1, soft, no hard shadow edges, faces partly in shadow and that is correct. Palette: aged wood brown, whitewashed wall, green foliage outside, washed indigo cloth, plus exactly one saturated accent. Mid saturation, mid contrast, real room clutter left in place. 1.85:1. No text, no watermark, no dramatic lighting, no shallow depth of field, no close-up, no staged symmetry.

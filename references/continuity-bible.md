@@ -4,6 +4,16 @@ Load this file when the project has a recurring character, location, or prop acr
 
 A continuity bible is not documentation. It is (a) the strings you paste verbatim into prompts and (b) the questions you ask before approving a take. If a field is never pasted and never checked, delete it.
 
+## 与项目状态的关系
+
+本文件负责人类可读的角色、地点、道具和镜头连续性规则；多场景项目的机器真相统一存入 `project-state.json`，其模板为 `../assets/project-state-template.json`，视觉弧和回写协议见 [长片视觉一致性系统](film-consistency-system.md)。不要在导演手册、连续性圣经和提示词中维护三份互相独立的状态。
+
+每个镜头区分四个状态：`planned_start`、`planned_end`、`observed_start`、`observed_end`。只有标为 `accepted` 的成片可以把 `observed_end` 写成下一镜头的真实起点；被拒镜头不得污染正史。生成下一场前运行：
+
+```bash
+python3 scripts/validate_project_state.py project-state.json
+```
+
 ## The continuity axes
 
 Fifteen things drift. Walk this list twice per shot: once when writing the prompt, once when reviewing the return. This list owns the question you ask. The repair manual — symptom, ranked causes, ranked fixes — is [failure-modes.md](failure-modes.md); the last section here maps each axis onto its code there.
@@ -30,7 +40,7 @@ Fifteen things drift. Walk this list twice per shot: once when writing the promp
 
 This section owns the identity string for the whole skill. Every other file links here rather than restating the budget or the rules, so if you meet a second word count anywhere, this one wins.
 
-The identity string is one noun phrase, 30–50 words, that fully re-specifies a character to a model that has no memory. It is **pasted verbatim** into every keyframe prompt and every video prompt for that character. It is never paraphrased, never shortened for a close-up, never "improved" between shots. Write it once, at pipeline step 5, store it in the character record below, and from then on copy it — do not retype it, because retyping is how paraphrase gets in.
+The identity string is one noun phrase, 30–50 words, that fully re-specifies a character to a model that has no memory. It is **pasted verbatim** into every keyframe prompt and every video prompt for that character. It is never paraphrased, never shortened for a close-up, never "improved" between shots. Write it once, at pipeline step 7, store it in the character record below, and from then on copy it — do not retype it, because retyping is how paraphrase gets in.
 
 Divide the two drifts. *Inside* a clip, identity is lost mainly to length and head rotation — see F1 in [failure-modes.md](failure-modes.md). *Between* clips, it is lost mainly to paraphrase, because each rewording moves the model to a different point in identity space. The identity string is the fix for the second kind, and it is the one you control completely.
 

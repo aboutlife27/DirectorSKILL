@@ -133,7 +133,7 @@ negative_prompt_adds: ["dutch angle", "handheld shake", "camera orbit", "slow mo
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 用斯皮尔伯格镜头设计以下场景：<一句话事件>
@@ -148,7 +148,7 @@ negative_prompt_adds: ["dutch angle", "handheld shake", "camera orbit", "slow mo
 输出：分镜表（编号 / 时长 / 景别 / 焦段 / 角度 / 运动 / 调度 / 光 / 连续性锚点）
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 [35mm | 135mm], [eye level | 1.2m child-height low angle], [locked | slow dolly-in at walking pace, 1.2 m/s].
@@ -159,7 +159,7 @@ End with [named facial change] and [final body position]. Maintain [face, costum
 Avoid: dutch angle, handheld shake, camera orbit, slow motion, extra people, text, watermark.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 [Shot size] of [subject], 35mm-equivalent, [child-height low angle | eye level].

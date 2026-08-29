@@ -1,11 +1,7 @@
 ---
 name: cinematic-director
-# Keep the description specific so the host agent loads this skill only for film/video direction tasks.
-description: Acts as a director and previs supervisor for film, video, and AI filmmaking. Converts scripts, prose, story ideas, briefs, or existing image/video assets into executable production deliverables: script and subtext breakdown, beat sheet, director's book, blocking and staging, shot list with coverage, keyframe/storyboard prompts, image-to-video motion prompts, sound and dialogue plans, edit and assembly timelines, continuity bibles, and QC repair notes. Includes per-genre playbooks, a controlled prompt lexicon, a coded failure-diagnosis manual, and capability-first adapters for video models (Runway, Veo, Kling, Luma, Sora-class, Hailuo, Pika, Vidu, 即梦/Dreamina/Seedance, 万相) and image models (Midjourney, Flux, Nano Banana, Seedream, Qwen-Image, SDXL). Optionally applies one named director's style lens (Spielberg, Hitchcock, Kubrick, Kurosawa, Scorsese, Fellini, Bergman, Tarkovsky, Wong Kar-wai, Nolan, Villeneuve, Fincher, Refn, Bi Gan, Zhang Yimou, Hou Hsiao-hsien, Park Chan-wook, Malick, Michael Mann, Coen Brothers) from references/director_styles/ to override camera, lens, lighting, palette, editing, sound, and prompt defaults. Use for shot planning, blocking, staging, camera movement, visual continuity, storyboard and keyframe design, prompt repair, "in the style of X" direction, and any AI video workflow.
-license: MIT
-metadata:
-  version: "2.0.0"
-  author: "wangzhang-wu"
+description: >-
+  Use when directing or managing production for narrative film, short film, long-form AI film, commercial or video work from a script, prose, brief, storyboard, image, clip, or generation failure; especially for automatic shot selection, cinematography, blocking, color scripts, camera movement, storyboards, prompts, editing, sound, continuity, visual consistency, director's books, one-click production, staged automation, or multi-scene project state.
 ---
 
 # Cinematic Director Skill
@@ -49,6 +45,12 @@ The enemy is adjective soup. `cinematic, dramatic, masterpiece, 8K` tells a mode
 | "…and give me a fixed prompt" | J→F | add `assets/video-prompt-template.md` and the matching tool adapter |
 | "Score this / gate this batch / how do I report a failure" | J | `assets/qc-checklist.md` |
 | "Direct this" / "everything I need" / full production pass | A–J | run the pipeline in order, loading per step |
+| Automatically choose shots, color, lens, or camera from a story | A–D | `references/story-to-visual-compiler.md` |
+| Feature film, multi-scene work, or "keep one film consistent" | C–G | `references/film-consistency-system.md`, `assets/film-visual-constitution.yaml`, `assets/project-state-template.json` |
+| 审计《Hell Grind》公开工作流、核对其证据或解释哪些做法可迁移 | any | `references/hell-grind-workflow.md` |
+| 执行 AI 长片端到端生产、建立 11 阶段门或运行项目看板 | A–J | `references/ai-feature-production-playbook.md`, `assets/ai-feature-production-runbook.yaml`, `references/film-consistency-system.md`, `assets/project-state-template.json` |
+| “一键制片”、制片管理、分级自动化、由 Codex 调用模型并持续执行 | K | `references/production-control-plane.md`, `assets/production-plan-template.json`, `references/ai-feature-production-playbook.md` |
+| Explain or extend the directing methods and research basis | any | `references/method-provenance.md` |
 | "In the style of \<director\>" | any | `references/director_styles/NN_<slug>.md` (exactly one) |
 | Names a specific model or platform | any | `references/ai-video-tool-adapters.md` or `references/image-model-adapters.md` |
 | Horror / comedy / commercial / vertical / any genre framing | any | `references/genre-playbooks.md` |
@@ -58,7 +60,40 @@ The enemy is adjective soup. `cinematic, dramatic, masterpiece, 8K` tells a mode
 
 Modes combine, and Mode J is rarely terminal: a repair that lands on re-planning the shot produces new shots, so chain J→F for the prompts, →I for the cut, and →G once more than two shots share invariants.
 
-A full production pass runs the steps in order, with modes attached where they produce a deliverable: 1 intake · 2 breakdown (A) · 3 beats (B) · 4 lens · 5 book (C) · 6 blocking · 7 shots (D) · 8 keyframes (E) · 9 adapter · 10 prompts (F) · 11 sound (H) · 12 edit (I) · 13 QC (J), with G running underneath. Steps 4 and 9 carry no mode letter and are the two most commonly skipped — do not skip them.
+A full narrative pass runs the steps in order: 1 intake · 2 director read (A) · 3 beats (B) · 4 film constitution · 5 automatic visual decision · 6 optional style reference · 7 director's book (C) · 8 blocking · 9 shots (D) · 10 keyframes (E) · 11 adapter · 12 prompts (F) · 13 sound (H) · 14 edit (I) · 15 QC and state write-back (J), with G running underneath. Steps 4, 5, 11, and 15 are the commonly skipped control points — do not skip them on multi-scene work.
+
+长片端到端执行时，上述叙事流程必须嵌入 `references/ai-feature-production-playbook.md` 的阶段门：先用证据与容量实验锁定交付，再建立资产和一致性正史；之后按首镜证明、单变量生成、并行剪辑、画面锁定、清理、调色和验收闭环推进。阶段 0-5 是集中生成窗口的前置门，两周生成日历从阶段 6 开始；不要把生成窗口误写为完整制作周期，也不要把前期工作重新塞进这两周。
+
+## 制片控制模式（K）
+
+当用户要真正运行项目，而不是只要一份导演方案时，使用本地控制内核。A–J 生成创作决策和模型输入，K 保存任务图、版本、候选、评审、审批门、恢复点和交付血缘。第一版由 Codex 领取任务包并调用当前可用模型；不要假装内核已经直连供应商，也不要把未验证链路升级为无人值守。
+
+固定闭环如下：
+
+1. 从 `assets/production-plan-template.json` 复制并按剧本编译项目任务图。
+2. 初始化项目并登记剧本、视觉参考和已有资产。
+3. 导入计划后领取一个任务包；根据任务的 `kind`、输入引用和输出合同选择模型。
+4. 调用模型后回填候选文件及 `model`、`prompt`、`seed` 和关键参数。
+5. 在同一审批门区间内可自动做技术 QC、拒绝和重试；每次主要只改一个变量。
+6. 到视觉宪法、核心资产、样片镜头或画面锁定时停止，把证据与候选交给用户。Codex 不能代替用户批准这四个门。
+7. 每次修改后读取 `status`；中断后先 `recover`，最终交付前运行 `export`。
+
+命令合同（所有成功与业务错误均输出 JSON）：
+
+```bash
+python3 scripts/production_control_cli.py init <project> --title <title> --project-id <id>
+python3 scripts/production_control_cli.py ingest <project> <source> --input-id script --role screenplay
+python3 scripts/production_control_cli.py plan <project> <production-plan.json>
+python3 scripts/production_control_cli.py next <project> --executor codex
+python3 scripts/production_control_cli.py submit <project> --run-id <id> --artifact <file> --metadata '<json>'
+python3 scripts/production_control_cli.py review <project> --candidate-id <id> --decision approve --reviewer codex
+python3 scripts/production_control_cli.py approve-gate <project> <gate> --reviewer <human> --human-confirmed
+python3 scripts/production_control_cli.py status <project>
+python3 scripts/production_control_cli.py recover <project>
+python3 scripts/production_control_cli.py export <project>
+```
+
+`review approve` 表示候选进入当前接受版本，可由 Codex 按已批准标准执行；`approve-gate` 是项目方向锁定，必须有用户明确决定。`--human-confirmed` 只是记录该决定的审计声明，不是身份认证，Codex 不得自行添加。用户在门上要求修改时，使用 `retry` 重做证据任务；新版本被接受后，内核会使已批准门和下游结果失效。详细状态、输入输出与故障恢复规则见 `references/production-control-plane.md`。
 
 ### Response size
 
@@ -79,7 +114,7 @@ Extract or infer this. If information is missing, proceed on stated assumptions 
 ```yaml
 project:
   title: optional
-  format: short film | trailer | social vertical | scene | commercial | music video | documentary | unknown
+  format: feature | short film | trailer | social vertical | scene | commercial | music video | documentary | unknown
   target_duration: seconds
   aspect_ratio: 16:9 | 9:16 | 2.39:1 | 1.85:1 | 4:3 | 1:1 | unknown
   target_tool: Runway | Veo | Kling | Luma | Sora-class | Hailuo | Pika | Vidu | Jimeng/Dreamina/Seedance | Wanxiang | other | unknown
@@ -114,7 +149,7 @@ Defaults when unspecified:
 - **Clip length** — 3–5s for character performance, 3–4s for fine hand work, 8–12s for environmental or product motion with no legible face. Longer only when the model holds narrative stably and the shot earns it. Duration strategy and its mechanism are owned by `references/ai-video-tool-adapters.md`.
 - **Camera** — locked or one slow push-in when continuity is fragile. Complex moves only when the story needs them and the tool controls them.
 - **Motion budget** — one primary subject action + one camera behavior + one environmental motion per clip. See the motion-budget model in `references/ai-video-tool-adapters.md`.
-- **Register** — set by genre (`references/genre-playbooks.md`) unless a director lens is named, which outranks it.
+- **Register** — derive it from dramatic evidence inside the project visual constitution. Genre and director references may suggest methods, but neither outranks the story or the film's established rules.
 
 ## Hard rules
 
@@ -127,18 +162,20 @@ Defaults when unspecified:
 7. **The keyframe is the control point.** A video model mostly re-animates what the still already decided. Fix the still before spending video generations.
 8. **Match the tool's control surface.** Do not ask a model for a feature it does not expose. Identify the surface, then pick the prompt shape.
 9. **Negatives are targeted, and they name instances.** Include only the constraints matching this shot's real risk. "No modern objects" is a category the model cannot resolve — name the things: no plastic, no lever handles, no rubber soles, no wristwatch, no printed logos. Long negative lists dilute and can invoke what they forbid.
-10. **One style lens at a time.** Mixing two directors produces incoherence. Pick one, say why, note what the other would have given.
-11. **Answer the size of the question.** A prompt request gets a prompt. Never expand a small ask into a production package, and never ask for information you can reasonably assume — state the assumption instead.
+10. **One project truth.** Multi-scene work has one `project-state.json`. Accepted footage writes the next real start state; rejected footage never becomes an ancestor, an old plan never overrules visible fact, and a scene boundary changes state only through a reasoned `state_resets` entry.
+11. **Methods, not imitation.** Translate director names into functional methods, then keep only those supported by dramatic evidence and the visual constitution. Never mix complete style packages.
+12. **One answer by default.** Return the highest-confidence visual strategy. Ask for a choice only when the top two candidates differ by less than 10 points or a choice would break the visual constitution.
+13. **Answer the size of the question.** A prompt request gets a prompt. Never expand a small ask into a production package, and never ask for information you can reasonably assume — state the assumption instead.
 
 ## Pipeline
 
-Thirteen steps. Run only the ones the request needs, in this order. Each step names the file to load if you go deep.
+Fifteen steps. Run only the ones the request needs, in this order. Each step names the file to load if you go deep.
 
 ### 1. Intake and scope
 
 Fix the deliverable, duration, aspect, tool, genre, and constraints. State assumptions in one or two lines, then work. Decide the shot budget: target duration ÷ average shot length for the register gives the shot count (`references/editing-and-assembly.md`).
 
-### 2. Script and subtext breakdown
+### 2. Director read and subtext breakdown
 
 Identify, in this order:
 
@@ -149,27 +186,41 @@ Identify, in this order:
 - **Emotional movement** — opening emotion → pressure → turn → closing emotion.
 - **Visual thesis** — the simplest visual idea that governs the scene.
 
+For narrative work, also record the turn, point of view, audience information advantage, power in/out, objective, obstacle, tactic, pressure delta, and visible suppressed behavior. Use the exact contract in `references/story-to-visual-compiler.md`; these fields establish the project intention at Step 4 and are the evidence for Step 5.
+
 The visual thesis must be concrete and testable: "the boy gets smaller as the room gets more judgmental," not "loneliness and fate." If you cannot state it as a change you could photograph, it is not a thesis yet.
 
 **Non-narrative work skips this block.** For commercial, product, corporate, fashion, music-video, and trailer briefs, the genre playbook's engine and audience contract replace it. The equivalent of a visual thesis is the claim and the single visible proof of it. Do not derive subtext for a lipstick.
 
 ### 3. Beat map
 
-Break the scene into beats, not shots. A beat is a change in the balance of pressure — not a change of camera. Each beat carries: story function, character state in and out, visual action, pressure delta, and a likely shot family drawn from the nine functions owned by `references/cinematic-language.md` — establishing, relation, close-up, insert/detail, reaction, transition, aftermath, point-of-view, reveal. Do not coin others; Step 7 has to look the word up.
+Break the scene into beats, not shots. A beat is a change in the balance of pressure — not a change of camera. Each beat carries: story function, character state in and out, visual action, pressure delta, and a likely shot family drawn from the nine functions owned by `references/cinematic-language.md` — establishing, relation, close-up, insert/detail, reaction, transition, aftermath, point-of-view, reveal. Do not coin others; Step 9 has to look the word up.
 
 For non-narrative formats, beats are the format's structural blocks — hook, demonstration, claim, end card — not pressure deltas. Template: `assets/beat-sheet-template.md`.
 
-### 4. Style lens selection (optional)
+### 4. Film visual constitution
 
-If the user names a director or says "in the style of X," load exactly one file from `references/director_styles/` and treat its `风格参数 / Style parameters` YAML as the override set for Steps 5, 7, 8, and 10. Step 8 matters most: the still is where a style is actually fixed, and a lens applied to the shot list but not to the keyframe will not survive generation.
+For a feature, short film, sequence spanning multiple scenes, or any project expected to continue later, load `references/film-consistency-system.md`. Establish the immutable core and the `open → rise → turn → climax → release` visual arc before writing local scene rules. Copy `assets/film-visual-constitution.yaml` for the human-readable contract and `assets/project-state-template.json` for machine state.
+
+Each scene inherits the constitution, applies its arc-position changes, and logs any exception with a reason, scope, and restore point. One-off scenes may keep the same structure in the director's book without creating files.
+
+### 5. Automatic visual direction
+
+For narrative work, load `references/story-to-visual-compiler.md`. Score 3–5 plausible scene archetypes from the director read, choose one primary archetype, and compile it into audience relation, staging, coverage, composition, lens, camera, light/color, sound, and editing decisions. For multi-scene work, constrain every candidate by the Step 4 constitution and current arc position. For a one-off scene, make the automatic decision first and record its lightweight local constitution at Step 7.
+
+Output one plan with a confidence margin and the three decisive pieces of story evidence. Do not ask the user to choose when the margin is at least 10. Do not choose a named director automatically.
+
+### 6. Style reference selection (optional)
+
+If the user names a director or says "in the style of X," load at most one file from `references/director_styles/` as a method reference. Translate its useful ideas into functional rules, then accept only those that serve the Step 5 dramatic decision and fit the Step 4 visual constitution.
 
 Available: `spielberg`, `hitchcock`, `kubrick`, `kurosawa`, `scorsese`, `fellini`, `bergman`, `tarkovsky`, `wong_kar_wai`, `nolan`, `villeneuve`, `fincher`, `refn`, `bi_gan`, `zhang_yimou`, `hou_hsiao_hsien`, `park_chan_wook`, `malick`, `michael_mann`, `coen_brothers`. Index and how to add more: `references/director_styles/README.md`.
 
-Precedence: **director lens > genre playbook > project tone > skill defaults.** If the user names two directors, pick the one that better serves the scene's dramatic core, say so in one line, and note what the other would have changed. If none is named, skip this step and let genre and tone set defaults at Step 5.
+Precedence: **dramatic evidence > film visual constitution > visual arc position > scene archetype > user functional preference > genre defaults > skill defaults.** If the user names multiple directors, do not merge their style packages. Translate each request into a function such as information control, exact camera placement, color role, or compositional pressure; use only compatible functions and say what was rejected in one line.
 
 Style modules describe high-level methods. Never copy specific shots, lines, characters, or plots from real films.
 
-### 5. Director's book / visual treatment
+### 7. Director's book / visual treatment
 
 The reusable rule set that stabilizes every later prompt: tone and genre, lens and framing policy, camera grammar and the allowed move set, lighting logic and key direction, palette and color script, production design and era lock, performance register, editing rhythm and target ASL, sound direction, and the **invariant clauses** — the identity strings and lighting invariant that get pasted verbatim into every prompt.
 
@@ -177,19 +228,19 @@ Template: `assets/director-book-template.md`. Depth: `references/lighting-and-co
 
 A director's book entry is only done when two different people filling in shots from it would produce compatible work.
 
-### 6. Blocking and staging
+### 8. Blocking and staging
 
 For every shot with people: start position, movement, interaction with space and props, camera relationship, end position, eyeline. Blocking is not where actors stand — it is how body position, movement, props, and camera placement reveal power, fear, attraction, secrecy, isolation, or irony.
 
 Depth: `references/blocking-and-staging.md` — staging geometries, proxemics, blocking notation, and the honest list of what AI models can and cannot render.
 
-### 7. Shot list and coverage
+### 9. Shot list and coverage
 
 Build rows only after beats and blocking are clear. Each shot: number, duration, scene/location, story function, shot size, lens, angle, camera movement, blocking as start → motion → end, light direction and atmosphere, continuity anchors, transition, risk, AI generation note.
 
 Template: `assets/shot-plan-template.md`. Grammar: `references/cinematic-language.md` — including the continuity geometry (axis of action, screen direction, eyeline match, the 30° rule) that a video model cannot infer on its own and must be encoded into keyframes.
 
-### 8. Keyframe strategy
+### 10. Keyframe strategy
 
 Choose by continuity risk:
 
@@ -202,13 +253,13 @@ Template: `assets/keyframe-prompt-template.md`. Consistency techniques (identity
 
 Gate: do not generate video from a keyframe that has not passed the pre-generation checks in `assets/qc-checklist.md`.
 
-### 9. Tool adapter selection
+### 11. Tool adapter selection
 
 Identify the control surface before writing a word. Read `references/ai-video-tool-adapters.md` (video) or `references/image-model-adapters.md` (stills). If the tool is unfamiliar, do not guess its features — ask which of these it exposes, or route by capability: text-to-video, image-to-video first frame, last-frame slot, reference binding, camera controls, motion strength, native audio, duration range, extend, multi-shot timestamps, seed, negative prompt.
 
 That answer selects one of four prompt shapes: **S1** motion-only, **S2** full-description, **S3** keyframe-pair, **S4** multi-shot timestamped.
 
-### 10. AI video prompt construction
+### 12. AI video prompt construction
 
 **S1 — motion-only** (image-to-video). The image already carries identity, composition, lighting, setting, costume, and style. The text defines motion, camera, timing, end state, and constraints — in this order:
 
@@ -245,19 +296,19 @@ Overall: [theme, tone, character and setting continuity rules]
 
 Templates: `assets/video-prompt-template.md`. Word-level craft, verb banks, the replacement table, negative-prompt library by failure class, and EN↔中文 terms: `references/prompt-lexicon.md`.
 
-### 11. Sound and dialogue plan
+### 13. Sound and dialogue plan
 
 Sound is a directing decision, and in AI film it is the cheapest continuity glue available — one continuous ambience bed under a sequence hides an enormous amount of visual drift.
 
 Plan five layers per shot: room tone, ambience, foley, spot effects, score. For dialogue, respect the one-speaker-per-clip rule, label speakers unambiguously, and convert what cannot be generated into voice-over, off-screen line, or reaction-only. Template: `assets/sound-plan-template.md`. Depth: `references/sound-and-dialogue.md`.
 
-### 12. Edit and assembly plan
+### 14. Edit and assembly plan
 
 Generated clips are raw material, not a cut. Specify the timeline: clip order, in/out points, trim handles, transition into each clip, and the audio layers running underneath. Design match cuts by building shot A's last frame and shot B's first frame together. Fix what can be fixed with a cutaway, a trim, or a dissolve rather than another generation.
 
 Template: `assets/edit-timeline-template.md`. Depth: `references/editing-and-assembly.md`.
 
-### 13. QC and repair loop
+### 15. QC, repair, and state write-back
 
 Gate with `assets/qc-checklist.md` when scoring a clip or a batch. When something fails, diagnose in this order — each bucket with the codes it usually resolves to:
 
@@ -274,6 +325,8 @@ If the user reports more than one symptom, collect **every** code before proposi
 Then apply the **cost ladder** in order — prompt edit, parameter change, regenerate, rebuild the keyframe, re-plan the shot, fix in the edit, cut the shot — and stop at the first level that works. After three failed generations of the same shot, change the shot, not the prompt: shorter, closer, simpler, split in two, switched to first/last frame, moved off-screen so only its consequence is shown, or replaced by a reaction or insert.
 
 Never run a diagnostic questionnaire. Answer on stated assumptions, mark the assumptions that would change the code, and ask at most one question — the one whose answer changes the deliverable, not the one that would change the diagnosis. Full coded diagnosis (F1–F19), root causes, and before/after repairs: `references/failure-modes.md`.
+
+For multi-scene work, close the loop after every reviewed clip. Mark it `accepted`, `rejected`, or `repair`; only an accepted clip writes `observed_start` and `observed_end` into `project-state.json`. The next planned shot inherits the latest accepted `observed_end`, not the earlier `planned_end`. Run `python3 scripts/validate_project_state.py <project-state.json>` before generating the next scene. Full merge and drift rules: `references/film-consistency-system.md`.
 
 Repair output format:
 
@@ -300,14 +353,15 @@ If no prompt, keyframe, or clip was supplied, do not invent the user's shot to f
 |---|---|---|---|
 | A | Director Analysis | Interpretation, subtext, direction rules | inline (below) |
 | B | Beat Sheet | Structure before shots | `assets/beat-sheet-template.md` |
-| C | Director's Book | Rules that govern the whole piece | `assets/director-book-template.md` |
+| C | Director's Book / Film Constitution | Rules that govern one scene or the whole piece | `assets/director-book-template.md`, `assets/film-visual-constitution.yaml` |
 | D | Shot Plan | Shot list, storyboard plan, shooting table | `assets/shot-plan-template.md` |
 | E | Keyframe Prompt Pack | Stills, first/last frames, panels, character sheets | `assets/keyframe-prompt-template.md` |
 | F | Video Motion Prompt Pack | Assets exist, motion prompts needed | `assets/video-prompt-template.md` |
-| G | Continuity Bible | Recurring characters, locations, multi-scene work | `references/continuity-bible.md` |
+| G | Continuity / Project State | Recurring characters, locations, accepted-footage state | `references/continuity-bible.md`, `assets/project-state-template.json` |
 | H | Sound & Dialogue Plan | Sound design, music, dialogue, VO | `assets/sound-plan-template.md` |
 | I | Edit & Assembly Plan | Cutting generated clips into a sequence | `assets/edit-timeline-template.md` |
 | J | QC & Repair | Something failed or looks wrong | `assets/qc-checklist.md` |
+| K | Production Control | Staged execution, model calls, versions, gates, recovery, delivery | `assets/production-plan-template.json`, `references/production-control-plane.md` |
 
 Mode A shape:
 
@@ -378,10 +432,13 @@ The good version names a camera behavior and forbids the rest, gives one primary
 ## Self-check before responding
 
 - Does every shot have a story function you could state in one clause?
+- Does the automatic direction name one primary archetype, a confidence margin, and three decisive pieces of story evidence?
+- For multi-scene work, does every local choice inherit the film constitution, follow the visual arc, or log a bounded exception?
 - Is there exactly one dominant camera move per clip — or a deliberate none?
 - Does every action have a start state and an end state?
 - Are the invariants written verbatim, identically, in every prompt of the scene?
 - Do adjacent shots differ by at least two size steps, unless matched on purpose?
 - Are the negatives limited to this shot's real risks?
-- If a style lens was named, would a reader be able to tell which one from the output alone?
+- If a director was named, did the answer translate that reference into functional methods instead of copying or mixing a complete style package?
+- Has every accepted clip written its observed end state before the next shot is planned?
 - Is the output proportional to what was asked?

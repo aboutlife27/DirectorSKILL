@@ -1,0 +1,4 @@
+interface:
+  display_name: "电影导演与视觉一致性"
+  short_description: "根据剧情自动选择分镜、摄影、色彩并维持长片视觉一致性"
+  default_prompt: "使用 $cinematic-director 根据剧情制定统一、可执行的导演与分镜方案；需要实际制片时启用模式 K，由 Codex 分级调用模型并在四个人工审批门停下。"

@@ -133,7 +133,7 @@ negative_prompt_adds: ["shallow depth of field or bokeh", "soft glamour lighting
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 用伯格曼镜头设计以下场景：<一句话事件>
@@ -150,7 +150,7 @@ negative_prompt_adds: ["shallow depth of field or bokeh", "soft glamour lighting
 输出：分镜表 + 剥层表 + 沉默表
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 [100mm | 150mm], locked camera on the eyeline axis, face filling [60-80%] of frame height, whole face inside depth of field.
@@ -161,7 +161,7 @@ End with [the face after the change, held]. Maintain [face, hair, collar, light 
 Avoid: bokeh, shallow focus, camera movement, smiling, head turning away, warm grade, text, watermark.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 [Extreme close-up | two-face composition], 100mm-equivalent, camera on the eyeline axis, eye level exactly at pupil height.

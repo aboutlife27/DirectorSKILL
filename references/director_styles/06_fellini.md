@@ -134,7 +134,7 @@ negative_prompt_adds: ["symmetrical composition", "synchronised crowd", "blurred
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 用费里尼镜头设计以下场景：<一句话事件>
@@ -150,7 +150,7 @@ negative_prompt_adds: ["symmetrical composition", "synchronised crowd", "blurred
 输出：分镜表 + 群众动作表 + 意象回旋表
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 [25mm | 32mm], eye level, camera drifting continuously through the crowd at walking pace — track plus pan, never settling.
@@ -163,7 +163,7 @@ Maintain [subject's face and costume, palette of pink/gold/wine red, the haze].
 Avoid: symmetrical composition, synchronised crowd, faceless blurred extras, shallow depth of field, text, watermark.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 [Wide of the procession | frontal close-up of one strange face], 25mm-equivalent, eye level, mild wide-angle facial exaggeration retained.

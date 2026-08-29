@@ -136,7 +136,7 @@ negative_prompt_adds: [hard cut, dry clean surfaces, hard-edged shadows, drone-s
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 风格锁定：毕赣式雾镇长镜头。
@@ -154,13 +154,13 @@ negative_prompt_adds: [hard cut, dry clean surfaces, hard-edged shadows, drone-s
 禁止硬切、禁止干燥表面、禁止对称构图、禁止无人机式绝对平滑。
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 One continuous gimbal shot, no cuts. 25mm equivalent at f/3.5, shoulder height, with a slight breathing rise and fall — never perfectly smooth. The camera drifts forward at walking pace, roughly one metre per second, following the subject from one to two seconds behind and never catching up. Route within the clip: start at <a wet tiled landing lit by a bare incandescent bulb>, pass through <a doorway / under a low bridge>, and end at <a corridor washed by pink karaoke neon and the cyan flicker of a television through a window>. The light source changes at the pass-through, and the colour temperature is never corrected — warm bulb, cold fluorescent and neon coexist in the same frame. Standing water on the floor reflects every source. Key ratio 3:1, soft, misty diffusion, no hard shadow edges. The subject walks the route at a steady pace, stops once, and continues; no other action. End with the subject walking out of frame and the camera continuing to drift toward <a rain-streaked window>. Maintain the humid teal-green and dim-purple low-saturation palette, the wet reflective surfaces, the same face and clothing. Avoid hard cuts, dry clean surfaces, hard shadows, drone-smooth flight, saturated stage colour, symmetric framing, corrected white balance.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 25mm-equivalent frame at f/3.5, shoulder height, slightly tilted, taken mid-drift as if the camera is walking. A damp small-town interior corridor in south-west China at night: cracked tile, standing water on the floor reflecting the ceiling, a doorway in the mid-ground acting as a gate to the next space. Mixed uncorrected light sources in one frame — a bare incandescent bulb overhead, a fluorescent tube deeper in, pink karaoke neon leaking from the right, cyan television flicker through a window. Soft misty diffusion, key ratio 3:1, no hard shadow edges. A figure in a rain jacket seen from behind, one to two seconds ahead of the camera, about a fifth of frame height, walking away. Palette humid teal-green, dim purple, tungsten amber, with karaoke pink and television cyan accents; low saturation, low contrast, thick tonal layering, visible moisture on every surface. 2.39:1. No text, no watermark, no dry clean surfaces, no hard shadows, no symmetric composition, no corrected white balance.

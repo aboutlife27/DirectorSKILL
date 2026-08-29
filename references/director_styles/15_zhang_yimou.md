@@ -139,7 +139,7 @@ negative_prompt_adds: ["desaturated palette", "mixed color temperatures in one f
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 风格锁定：张艺谋式高饱和单色场。
@@ -156,13 +156,13 @@ negative_prompt_adds: ["desaturated palette", "mixed color temperatures in one f
 输出：分镜表（编号 / 时长 / 景别 / 焦段 / 角度 / 运动 / 队形 / 主色占比 / 连续性锚点）
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 Locked symmetrical wide, 35mm equivalent, camera at eye level, one-point perspective down the centre of the space. The frame is dominated by a single saturated <red> field made of real material — <painted doors / hanging dyed cloth / stacked grain / rows of lanterns> — filling roughly 70% of the image. <N rows by M columns> of identical units are arranged on an even grid; they all perform the same action, <action>, on the same beat, about once every <N> seconds. One figure at <position> does not move with them: <that figure's single action>. Camera performs exactly one constant-speed move: a lateral track of about <0.4> metres per second parallel to the rank, no acceleration, no reframe. Hard directional daylight, 3:1, texture of the material clearly visible, shadows retain hue rather than going black. Keep the single-hue palette, high saturation, the same faces, garments and grid spacing. Avoid: desaturated color, mixed color temperature, neon, handheld shake, lens flare, zippers or printed logos, shallow depth of field.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 Symmetrical one-point-perspective wide frame, 35mm equivalent, camera eye level, dead centre. A single saturated <red> material field — <describe the physical material> — occupies about 70% of the frame and recedes to a vanishing point at frame centre. Repeating identical units on an even grid, evenly spaced, all in the same posture. One element breaks the pattern: <a single white object / a single figure turned the wrong way>, placed <position>. Hard daylight from <direction>, key ratio 3:1, visible weave and grain in the material, shadows coloured not black. Palette: one dominant hue plus skin tone, black hair, and one patch of pure white. High saturation, mid contrast, no colour cast on the highlights. 2.39:1. No text, no watermark, no neon, no fog, no zippers, no printed logos, no shallow depth of field.

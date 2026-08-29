@@ -1,6 +1,6 @@
 # Editing and Assembly
 
-Load this file when the deliverable is a cut plan, a shot count derived from a target duration, a transition design between separately generated clips, or a timeline/assembly spec (Step 12, Mode I). Fillable template: [edit-timeline-template.md](../assets/edit-timeline-template.md). Audio layers, pre-laps and music tempo live in [sound-and-dialogue.md](sound-and-dialogue.md); shot sizes, angles and screen-direction geometry live in [cinematic-language.md](cinematic-language.md).
+Load this file when the deliverable is a cut plan, a shot count derived from a target duration, a transition design between separately generated clips, or a timeline/assembly spec (Step 14, Mode I). Fillable template: [edit-timeline-template.md](../assets/edit-timeline-template.md). Audio layers, pre-laps and music tempo live in [sound-and-dialogue.md](sound-and-dialogue.md); shot sizes, angles and screen-direction geometry live in [cinematic-language.md](cinematic-language.md).
 
 Frame-rate assumption throughout: 24 fps. Timecodes written `m:ss.d`; frame counts written `f`.
 
@@ -105,7 +105,7 @@ Pick exactly **one** carrier — shape, motion vector, sound, or colour. Two car
 
 Worked, single carrier — shape. A is to end on a ceiling light: a white disc filling roughly 30% of frame area, centred, on a dark ground. B is to open on a coin on a table: white disc, roughly 30%, centred, dark ground. Build both stills first, overlay them at 50%, and move the coin until the two discs sit on each other; only then generate. Do not also try to match the motion — the second carrier would split the audience's attention and neither would land.
 
-Execution: design the pair of stills at Step 8 (keyframes), then generate A **toward** its last frame and B **away from** its first frame, using first-frame/last-frame slots where the tool exposes them — see [ai-video-tool-adapters.md](ai-video-tool-adapters.md) and [image-model-adapters.md](image-model-adapters.md).
+Execution: design the pair of stills at Step 10 (keyframes), then generate A **toward** its last frame and B **away from** its first frame, using first-frame/last-frame slots where the tool exposes them — see [ai-video-tool-adapters.md](ai-video-tool-adapters.md) and [image-model-adapters.md](image-model-adapters.md).
 
 ### Faking a whip or blur transition
 

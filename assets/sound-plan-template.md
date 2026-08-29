@@ -1,6 +1,6 @@
 # Sound & Dialogue Plan Template (Mode H)
 
-Load this file when you are at Step 11 (sound and dialogue plan) or the user asked for Mode H.
+Load this file when you are at Step 13 (sound and dialogue plan) or the user asked for Mode H.
 Sound craft — what a bed does, how audio leads a cut, lip-sync and VO technique, what music is
 for — is owned by [sound and dialogue](../references/sound-and-dialogue.md). Cut points and pacing
 math are owned by [editing and assembly](../references/editing-and-assembly.md). Asset naming is

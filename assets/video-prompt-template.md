@@ -1,6 +1,6 @@
 # Video Motion Prompt Template (Mode F)
 
-Load this file when you are at Step 10 (AI video prompt construction) or the user asked for Mode
+Load this file when you are at Step 12 (AI video prompt construction) or the user asked for Mode
 F — finished prompts to paste into a generator. The four prompt shapes and their slot orders,
 which slots a given model actually reads, and what its UI controls instead of text are owned by
 [AI video tool adapters](../references/ai-video-tool-adapters.md). Word choice, word budgets,

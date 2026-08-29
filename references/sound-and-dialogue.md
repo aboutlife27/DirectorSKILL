@@ -1,6 +1,6 @@
 # Sound and Dialogue
 
-Load this file when the deliverable includes a sound plan, generated or lip-synced dialogue, voice-over, a music brief, or when separately generated clips need audio to hold them together (Step 11, Mode H). Fillable template: [sound-plan-template.md](../assets/sound-plan-template.md). Cut logic, handles and timeline mechanics live in [editing-and-assembly.md](editing-and-assembly.md).
+Load this file when the deliverable includes a sound plan, generated or lip-synced dialogue, voice-over, a music brief, or when separately generated clips need audio to hold them together (Step 13, Mode H). Fillable template: [sound-plan-template.md](../assets/sound-plan-template.md). Cut logic, handles and timeline mechanics live in [editing-and-assembly.md](editing-and-assembly.md).
 
 Frame-rate assumption throughout: 24 fps. Times written `m:ss.d`. A time written `@t` is measured from that shot's first frame; a bare timecode is program time.
 

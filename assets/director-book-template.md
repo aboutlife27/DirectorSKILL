@@ -1,6 +1,6 @@
 # Director's Book Template
 
-Load this file when you are at Step 5 (director's book / visual treatment) or the user asked for Mode C — a 导演阐述, visual treatment, style bible, or "set the rules before we shoot".
+Load this file when you are at Step 7 (director's book / visual treatment) or the user asked for Mode C — a 导演阐述, visual treatment, style bible, or "set the rules before we shoot".
 
 ## A director's book is a constraint document
 
@@ -24,10 +24,25 @@ Fill every field. Delete nothing; write `n/a — <reason>` if a field genuinely 
 ```markdown
 # Director's Book — <project> / <scene or sequence>
 
+## Automatic direction decision
+- Primary archetype: <one from references/story-to-visual-compiler.md>
+- Secondary mechanism: <optional, never a second complete style>
+- Confidence margin: <top score minus second score>
+- Decisive evidence: <three story facts>
+- Audience relation: <POV and information timing>
+- Governing rule: <one filmable rule>
+
+## Film constitution inheritance
+- Project state: <path or n/a for a one-off scene>
+- Arc position: <0.00–1.00 and named phase>
+- Inherited immutable core: <exact field names, not paraphrases>
+- Arc adjustments: <relative changes from the previous position>
+- Logged exceptions: <field, reason, scope, restore point; or none>
+
 ## Frame
 - Format: <short film | trailer | scene | spot> · Aspect: <16:9 | 2.39:1 | 4:3 | 9:16>
 - Target duration: <s> · Shot count: <n> · Tool class: <first/last-frame · reference-binding · text-to-video>
-- Style lens: <slug from ../references/director_styles/, or none — and if none, the genre default used>
+- Style reference: <optional functional method; never an automatic named-director identity>
 
 ## Delivery
 - Platform and spec: <where it plays, and the spec you actually checked>
@@ -246,7 +261,7 @@ door never opens
 - A `never` list that is empty. You have not made a choice yet.
 - Palette given as a mood ("melancholy blue"). Name the object that is that color.
 - ASL given without a shot count and a duration. It is arithmetic, not a feeling.
-- ASL that departs from the genre default with no logged reason. The deviation is usually right; the silence about it is what breaks, because Step 7 cannot tell a decision from an oversight.
+- ASL that departs from the genre default with no logged reason. The deviation is usually right; the silence about it is what breaks, because Step 9 cannot tell a decision from an oversight.
 - A `NEG_BASE` containing a category — "no modern objects", "nothing anachronistic", "no bad anatomy". Name the things instead, or the string does nothing and F8 arrives anyway.
 - A `Delivery` block with `Aspect` filled and everything else blank. That is how a vertical piece gets planned as a scene and loses its format in the edit.
 - Invariant strings written in the second person or containing instructions ("try to keep"). They are descriptions and must read as descriptions when pasted mid-prompt.

@@ -137,7 +137,7 @@ negative_prompt_adds: [holographic interface, neon signage, cluttered cyberpunk 
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 风格锁定：维伦纽瓦式纪念碑尺度。
@@ -154,13 +154,13 @@ negative_prompt_adds: [holographic interface, neon signage, cluttered cyberpunk 
 禁止：全息 UI、霓虹、赛博街景、手持、硬边阴影、暖冷分离调色。
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 Locked camera, or a single constant-speed lateral track of about three metres with no acceleration; 21mm equivalent, eye level, centered one-point composition. The frame is dominated by an unadorned concrete structure; the horizon sits at one-eighth of the frame height. A single human figure, about eight percent of frame height, walks from the right third toward the centre at a steady pace, stops, and remains still for the last third of the clip. Fog begins at roughly ten metres and thickens with distance, so the far plane reads two to three stops lighter than the foreground — a depth gradient, not an overall blur. Backlight from one large lit surface behind the figure, key ratio 6:1, soft, no hard shadow edges; the figure reads as a half-silhouette. Single dominant hue: ochre. Hold two seconds of empty frame before the figure enters and three seconds after he stops. Maintain the low-saturation single-hue palette, the concrete texture, the same coat and silhouette. Avoid holographic interfaces, neon, cyberpunk clutter, hard shadows, handheld shake, split warm-cool grading, lens flare.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 21mm-equivalent extreme wide, eye level, centered symmetric one-point composition. A vast unadorned concrete structure fills the frame; a single doorway of known human scale sits at the centre for reference. One figure stands at about eight percent of frame height in the left third, reading as a half-silhouette against a large backlit surface. Horizon at one-eighth of the frame height, the rest is negative space. Fog as a depth gradient: sharp in the near ten metres, two to three stops lighter beyond thirty. Soft backlight, key ratio 6:1, no hard shadow edges, no flare. Single dominant hue, ochre sand, low saturation, mid contrast, with one very small warm lamp deep in frame as the only accent. 2.39:1. No text, no watermark, no holographic interface, no neon, no cyberpunk detail, no busy background.

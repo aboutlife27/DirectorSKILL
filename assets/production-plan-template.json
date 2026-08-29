@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0",
+  "project": {
+    "id": "feature-template",
+    "title": "未命名长片"
+  },
+  "continuity_state": "project-state.json",
+  "tasks": [
+    {
+      "id": "visual-constitution",
+      "kind": "visual_constitution",
+      "stage": "development",
+      "depends_on": [],
+      "required_gate": null,
+      "inputs": {"artifacts": ["script"]},
+      "output_contract": {"media_type": "application/json", "purpose": "项目视觉宪法与全片视觉弧"}
+    },
+    {
+      "id": "character-core",
+      "kind": "character_asset",
+      "stage": "assets",
+      "depends_on": ["visual-constitution"],
+      "required_gate": "visual_constitution",
+      "inputs": {"characters": ["protagonist"], "views": ["front", "side", "back", "details"]},
+      "output_contract": {"media_type": "image/png", "purpose": "主要角色三视图与局部细节联系表"}
+    },
+    {
+      "id": "scene-core",
+      "kind": "scene_asset",
+      "stage": "assets",
+      "depends_on": ["visual-constitution"],
+      "required_gate": "visual_constitution",
+      "inputs": {"locations": ["primary-location"], "views": ["establishing", "reverse", "side", "overhead"]},
+      "output_contract": {"media_type": "image/png", "purpose": "核心场景多视图空间联系表"}
+    },
+    {
+      "id": "prop-core",
+      "kind": "prop_asset",
+      "stage": "assets",
+      "depends_on": ["visual-constitution"],
+      "required_gate": "visual_constitution",
+      "inputs": {"props": ["story-critical-prop"], "views": ["front", "side", "back", "details"]},
+      "output_contract": {"media_type": "image/png", "purpose": "关键道具多视图与材质细节联系表"}
+    },
+    {
+      "id": "core-assets-manifest",
+      "kind": "asset_manifest",
+      "stage": "assets",
+      "depends_on": ["character-core", "scene-core", "prop-core"],
+      "required_gate": "visual_constitution",
+      "inputs": {"validation": ["identity", "geometry", "lighting", "cross-combination"]},
+      "output_contract": {"media_type": "application/json", "purpose": "核心资产接受版本与压力测试清单"}
+    },
+    {
+      "id": "pilot-storyboard",
+      "kind": "storyboard",
+      "stage": "pilot",
+      "depends_on": ["core-assets-manifest"],
+      "required_gate": "core_assets",
+      "inputs": {"selection": "代表性高风险场景"},
+      "output_contract": {"media_type": "application/json", "purpose": "样片场景分镜与镜头生成合同"}
+    },
+    {
+      "id": "pilot-video",
+      "kind": "video_generation",
+      "stage": "pilot",
+      "depends_on": ["pilot-storyboard"],
+      "required_gate": "core_assets",
+      "inputs": {"mode": "first_last_frame", "candidates": 3},
+      "output_contract": {"media_type": "video/mp4", "purpose": "代表性样片镜头"}
+    },
+    {
+      "id": "pilot-report",
+      "kind": "pilot_evaluation",
+      "stage": "pilot",
+      "depends_on": ["pilot-video"],
+      "required_gate": "core_assets",
+      "inputs": {"checks": ["continuity", "motion", "cost", "latency", "repairability"]},
+      "output_contract": {"media_type": "application/json", "purpose": "样片可行性与批量生产阈值报告"}
+    },
+    {
+      "id": "shot-batch",
+      "kind": "shot_generation_batch",
+      "stage": "production",
+      "depends_on": ["pilot-report"],
+      "required_gate": "pilot_shots",
+      "inputs": {"scope": "按实际项目拆为逐镜任务"},
+      "output_contract": {"media_type": "application/json", "purpose": "全量已接受镜头版本清单"}
+    },
+    {
+      "id": "sound-mix",
+      "kind": "sound_edit",
+      "stage": "postproduction",
+      "depends_on": ["shot-batch"],
+      "required_gate": "pilot_shots",
+      "inputs": {"layers": ["dialogue", "room-tone", "ambience", "foley", "music"]},
+      "output_contract": {"media_type": "audio/wav", "purpose": "连续声音底与临时混音"}
+    },
+    {
+      "id": "rough-cut",
+      "kind": "rough_cut",
+      "stage": "postproduction",
+      "depends_on": ["shot-batch", "sound-mix"],
+      "required_gate": "pilot_shots",
+      "inputs": {"timeline": "main", "unresolved_issues": 0},
+      "output_contract": {"media_type": "video/mp4", "purpose": "供画面锁定审批的粗剪"}
+    },
+    {
+      "id": "final-master",
+      "kind": "final_export",
+      "stage": "delivery",
+      "depends_on": ["rough-cut"],
+      "required_gate": "picture_lock",
+      "inputs": {"preset": "mezzanine-master"},
+      "output_contract": {"media_type": "video/mp4", "purpose": "最终母版"}
+    }
+  ],
+  "gates": [
+    {"id": "visual_constitution", "evidence_tasks": ["visual-constitution"]},
+    {"id": "core_assets", "evidence_tasks": ["core-assets-manifest"]},
+    {"id": "pilot_shots", "evidence_tasks": ["pilot-report"]},
+    {"id": "picture_lock", "evidence_tasks": ["rough-cut"]}
+  ]
+}

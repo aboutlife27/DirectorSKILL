@@ -1,6 +1,6 @@
 # AI Video Tool Adapters
 
-Load this file when you reach Step 9 (tool adapter selection) or Step 10 (AI video prompt construction), when the user names a video model or says "I'm generating in X", or when a clip has failed and the tool is part of the diagnosis.
+Load this file when you reach Step 11 (tool adapter selection) or Step 12 (AI video prompt construction), when the user names a video model or says "I'm generating in X", or when a clip has failed and the tool is part of the diagnosis.
 
 **Staleness warning, before anything else.** Both capability matrices below and every per-tool block describe capability *classes as of writing*, not a live feature list. Vendors ship, rename, and remove controls constantly, and different surfaces of the same product expose different ones. Nothing on this page is a fact you can quote to a client — re-check it against current documentation, and read the panel in front of you before you promise a user a control.
 
@@ -64,7 +64,7 @@ Slot order:
 5. What must not change across the interpolation
 6. Exclusions (only if the tool has no negative field)
 
-The emittable skeleton for these six slots is the S3 block in SKILL.md Step 10 and Template 2 in [../assets/video-prompt-template.md](../assets/video-prompt-template.md); both fill exactly this list in this order, so a prompt written from either one can be audited against the slots here.
+The emittable skeleton for these six slots is the S3 block in SKILL.md Step 12 and Template 2 in [../assets/video-prompt-template.md](../assets/video-prompt-template.md); both fill exactly this list in this order, so a prompt written from either one can be audited against the slots here.
 
 Rule: the model interpolates, it does not reason. If the two frames differ in more than one of {subject pose, camera position, light state}, it will morph rather than move. Too far apart? Build a middle keyframe and make it two clips.
 
@@ -183,7 +183,7 @@ Each block has the same nine parts: Best for, Surfaces to exploit, Language, Asp
 Two rules run across every block, so they are stated once here instead of twelve times:
 
 - Negative field. Where the surface exposes one, put every exclusion in it and keep the positive prompt free of the word "no". Where no negative field is exposed, convert every exclusion into a positive fact about the frame — "the platform behind her is empty", not "no extra people". Each block's Rules line says which case that family is usually in. Where the matrix reads `part` or `varies` the answer differs by surface and tier, so look at the panel in front of you; if you cannot confirm a field, write the prompt as though there is none, because that version is safe on both.
-- Aspect. On image-to-video the input still's ratio governs the output whatever the tool's aspect control says, so the aspect decision is really made at Step 8 and the video tool inherits it — see [image-model-adapters.md](image-model-adapters.md). Each block's Aspect line therefore covers the text-to-video path and names ratio *classes* (landscape / portrait / square), never a preset list, because preset lists change.
+- Aspect. On image-to-video the input still's ratio governs the output whatever the tool's aspect control says, so the aspect decision is really made at Step 10 and the video tool inherits it — see [image-model-adapters.md](image-model-adapters.md). Each block's Aspect line therefore covers the text-to-video path and names ratio *classes* (landscape / portrait / square), never a preset list, because preset lists change.
 
 ### Runway family
 
@@ -238,7 +238,7 @@ Two rules run across every block, so they are stated once here instead of twelve
 - Best for — Chinese-language ideation, first/last-frame work, vertical short-form, fast iteration, period-Chinese subject matter.
 - Surfaces to exploit, where the UI exposes them — 首尾帧 (first/last frame), 运动幅度 (motion amplitude), 运镜 (camera presets), 种子 (seed), reference images and 角色参考 (character reference), 负向提示 (negative prompt) on some surfaces, multi-shot on the Seedance side. These surfaces are renamed and reshuffled often; read the panel in front of you rather than this list.
 - Language — Chinese, the whole prompt including craft terms (固定镜头, 机位齐腰高度, 逆光), and Chinese in the negative field where one is exposed. Culturally specific nouns are the main reason: 旗袍, 弄堂, 蓑衣 resolve here and their English paraphrases do not.
-- Aspect — vertical is first-class on this family: landscape, portrait, and square classes on the text path. The 首尾帧 and image-to-video paths inherit the stills, so a native 9:16 short is composed at Step 8, not chosen here.
+- Aspect — vertical is first-class on this family: landscape, portrait, and square classes on the text path. The 首尾帧 and image-to-video paths inherit the stills, so a native 9:16 short is composed at Step 10, not chosen here.
 - Priority — 镜头 (camera), 主体起始状态 (subject start state), one action, environmental detail, end state, consistency lock.
 - Templates — both language variants below.
 - Rules — 负向提示 is `part` on this family: it appears on some surfaces and tiers and not on others, and the whole negative strategy inverts on that one fact, so check the panel before you write. **Where the field is exposed, put every exclusion in it as a plain comma-separated list and keep the positive prompt free of 不 and 没有** — the one exception is a withheld action that *is* the beat, as 不敲门 (she does not knock) is in the example below. **Where no negative field is exposed, convert every exclusion into a positive fact about the frame**: 门始终关着 (the door stays closed) rather than 不要开门, 走廊里只有她一个人 (she is the only person in the corridor) rather than 不要出现别人. A negation inside the positive prompt is unreliable here and often summons the noun it names. Concise Chinese generally outperforms verbose English on the Chinese UI; for the working length, see the two windows below. On 运动幅度, the number of steps and the default both change between builds, so do not plan against a specific value: whatever scale your build exposes, set it to the lowest setting that still produces the action, and treat the default as too high for any shot where a face fills more than a third of the frame. Same for length — pick the shortest offered option that fits the action rather than assuming 3s is on the menu. Once a take is close, lock the seed and change exactly one clause per retry.
@@ -360,7 +360,7 @@ Shot 3 [6-10s]: wide, she turns and walks away from camera, slow push in.
 - Best for — animating a still whose look you want preserved above everything else.
 - Surfaces to exploit — image-first animation, a low/high motion setting rather than a numeric one, extend.
 - Language — English.
-- Aspect — inherited from the still, and only from the still: this family has no meaningful aspect decision of its own, so the delivery ratio is composed at Step 8 and the animation pass follows it.
+- Aspect — inherited from the still, and only from the still: this family has no meaningful aspect decision of its own, so the delivery ratio is composed at Step 10 and the animation pass follows it.
 - Priority — what moves, how much, nothing else.
 - Template — S1 with slots 3 and 4 only: one subject motion, one environmental motion. Leave the camera slot empty rather than filling it with words the tool will not honour.
 - Rules — the negative field is `part` on the animation pass and should be assumed inert: put the exclusion in the still instead, where the image model does have one, and write the video prompt as positive facts only. Treat it as a look-preserver, not a director. Low motion for any shot containing a face; high motion only for environment, weather, or abstract texture. Prose camera direction tends to land weakly here, so do not plan camera-led shots on this surface. Assume you are budgeting a full sound pass in the edit, and check the current documentation before promising anyone a native audio track.

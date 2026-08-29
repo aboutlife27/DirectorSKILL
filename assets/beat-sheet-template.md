@@ -10,7 +10,7 @@ Seven rules. A row that breaks any of them is not a beat.
 
 1. **State in must differ from state out.** If you cannot write two genuinely different phrases, merge the row into its neighbour.
 2. **Every delta names its agent.** Something applied the pressure: the character's own body, another person, an object, an off-screen sound, or a deadline. "The mood shifts" names no agent and is not a beat.
-3. **Camera is not a beat.** "Push in on his face" is a Step 7 decision. A real beat survives being shot three different ways. If the visual-action cell contains a shot size or a camera move, you have written a shot.
+3. **Camera is not a beat.** "Push in on his face" is a Step 9 decision. A real beat survives being shot three different ways. If the visual-action cell contains a shot size or a camera move, you have written a shot.
 4. **Location change is not a beat.** Walking to the door is a beat only if arriving changes the pressure. Otherwise it is travel and belongs inside a neighbouring beat.
 5. **One beat, one turn.** Two turns in one row means two rows.
 6. **Escalation, not business, is what earns a row.** Beats run in story order — you do not reorder them. But if the running tension is flat across three consecutive rows, those three rows are one beat and you have listed activity.
@@ -33,6 +33,23 @@ The numbers are only worth writing if they are arithmetic: the running curve mus
 
 ## Beat table
 
+叙事任务在表格前先写导演证据。这些字段由 [剧情到视觉决策编译器](../references/story-to-visual-compiler.md) 定义，后续自动选择不得跳过：
+
+```yaml
+director_read:
+  dramatic_function: "本场对全片造成的变化"
+  turn: "不可逆的可观察事件"
+  pov: "观众感知依附谁，何时转移"
+  audience_information: "观众相对人物早知、同知或晚知"
+  power_in: "开场谁控制行动、空间或信息"
+  power_out: "结尾谁控制行动、空间或信息"
+  objective: "主体此刻想得到什么"
+  obstacle: "什么阻止目标"
+  tactic: "主体如何绕开阻碍"
+  subtext: "台词表面以下真正发生什么"
+  visible_behavior: "承载转折的动作、停顿或声音"
+```
+
 | # | Story function | State in | Δ pressure (agent) | Visual action | State out | Shot family | Sec |
 |---:|---|---|---|---|---|---|---:|
 | 1 |  |  |  |  |  |  |  |
@@ -42,7 +59,7 @@ Column rules:
 
 - **Story function** — the job this beat does for the scene, in verb form. Not "sad moment"; "reveal that delivering the letter has a cost".
 - **Visual action** — externally visible behaviour only. No verbs the camera cannot photograph (`realizes`, `remembers`, `feels`). See the verb list in [prompt lexicon](../references/prompt-lexicon.md).
-- **Shot family** — one of the shot-function names owned by [cinematic language](../references/cinematic-language.md): establishing, relation, close-up, insert/detail, reaction, transition, aftermath, point-of-view, reveal. This is a *family*, not a shot; it tells Step 7 what kind of coverage the beat wants. Do not coin names outside that list — Step 7 has to be able to look the word up.
+- **Shot family** — one of the shot-function names owned by [cinematic language](../references/cinematic-language.md): establishing, relation, close-up, insert/detail, reaction, transition, aftermath, point-of-view, reveal. This is a *family*, not a shot; it tells Step 9 what kind of coverage the beat wants. Do not coin names outside that list — Step 9 has to be able to look the word up.
 - **Sec** — estimated screen time. These sum to the scene's target duration and become the time budget for the shot plan.
 
 ## Worked example
@@ -61,7 +78,7 @@ Visual thesis: the door grows and the courier shrinks until the only thing in fr
 
 Running tension — courier: `2 → 3 → 5 → 7 → 10 → 4`. Audience: `2 → 3 → 5 → 7 → 9 → 10`. Both curves are the state-in of B1 followed by each state-out, so every step is the row's Δ; if they do not add up, one of the two is a wish. The largest rise (+3, B4) completes at 82% of scene time, and only the courier comes down. That is the shape you want.
 
-This beat sheet feeds [director book](director-book-template.md) at Step 5 and [shot plan](shot-plan-template.md) at Step 7. Beat numbers (`B1`…`B5`) are the join key — do not renumber them once shots reference them.
+This beat sheet feeds [director book](director-book-template.md) at Step 7 and [shot plan](shot-plan-template.md) at Step 9. Beat numbers (`B1`…`B5`) are the join key — do not renumber them once shots reference them.
 
 ## How many beats
 

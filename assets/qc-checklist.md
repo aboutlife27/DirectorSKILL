@@ -1,6 +1,6 @@
 # QC & Repair Checklist (Mode J)
 
-Load this file when you are at Step 13 (QC and repair loop) or the user says a generation is
+Load this file when you are at Step 15 (QC, repair, and state write-back) or the user says a generation is
 wrong. Diagnosis depth — the symptom, cause, and fix behind every F-code below — is owned by
 [failure modes](../references/failure-modes.md). Retry budgets, version naming, and the approval
 log are owned by [production workflow](../references/production-workflow.md). This file owns the

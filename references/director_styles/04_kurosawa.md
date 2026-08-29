@@ -135,7 +135,7 @@ negative_prompt_adds: ["dry clothing in rain", "clean faces", "slow motion", "ca
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 用黑泽明镜头设计以下场景：<一句话事件>
@@ -150,7 +150,7 @@ negative_prompt_adds: ["dry clothing in rain", "clean faces", "slow motion", "ca
 输出：分镜表 + 阵型图说明 + 屏幕方向检查列
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 [100mm | 250mm long lens, compressed], [eye level | 0.7m low], [locked hold | lateral track moving with the line].
@@ -162,7 +162,7 @@ End with [the group holding still, weather continuing]. Maintain [faces, wet fab
 Avoid: dry clothing, clean faces, slow motion, camera orbit, shallow depth of field, text, watermark.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 [Extreme wide with figures under 1/6 frame height | long-lens compressed band of 6 figures], 250mm-equivalent, eye level.

@@ -2,7 +2,7 @@
 
 Load this file when the task requires shot design, lens choice, camera geometry, coverage
 planning, composition, aspect-ratio decisions, or any director-level visual reasoning —
-Steps 5–8 of the pipeline, and every Mode D shot row or Mode E keyframe that needs a
+Steps 5–10 of the pipeline, and every Mode D shot row or Mode E keyframe that needs a
 defensible size/lens/angle/move. It owns shot grammar only: light lives in
 [lighting-and-color.md](lighting-and-color.md), actor movement in
 [blocking-and-staging.md](blocking-and-staging.md), cut logic in

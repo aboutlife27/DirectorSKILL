@@ -1,0 +1,185 @@
+schema_version: "2.2.0"
+project:
+  title: ""
+  delivery_level: feature_rough_cut
+  target_runtime_minutes: null
+  generation_window_days: null
+  owner: ""
+  generation_window_policy:
+    prerequisites: [S00, S01, S02, S03, S04, S05]
+    starts_at: S06
+    primary_scope: [S06, S07, S08]
+    rule: 阶段 S00-S05 未通过时不得宣布集中生成窗口开始；已经开窗则降低交付等级并补齐前置门。
+
+evidence_policy:
+  levels:
+    observed: 原始日志、实际输出或可复现实验
+    reported: 项目方或供应商自述
+    inferred: 从证据推导、仍需项目实验验证
+    unknown: 尚无足够证据
+  rule: 任何容量、成本、质量和周期结论必须带证据等级与来源。
+
+consistency_contract:
+  state_schema_version: "1.0"
+  immutable_core:
+    aspect_ratio: "2.39:1"
+    lens_family: [32, 50, 75]
+    camera_support: [tripod, dolly]
+    palette_roles:
+      base: 世界的常态色及其叙事含义
+      character_a: 角色或观念 A 的颜色角色
+      character_b: 角色或观念 B 的颜色角色
+      consequence: 结果或代价出现时才允许的颜色
+    lighting_logic: 由场内光源驱动，保持主光方向连续
+    framing_rule: 人物关系优先于单人漂亮构图
+    texture: 克制的细颗粒与自然高光滚降
+    spatial_rule: 权力关系优先通过同框调度表达
+    performance_register: 内收，情绪通过动作受阻和呼吸显现
+    edit_rule: 情绪和故事优先于视觉炫技，动作完成后再切
+    sound_rule: 环境声承担空间连续性，音乐只进入结构转折
+  arc_variables: []
+  exception_budget_per_act: 1
+  accepted_footage_rule: 下一镜计划起点必须继承上一镜已验收实际终点。
+  canonical_state_file: assets/project-state-template.json
+
+iteration_policy:
+  one_primary_variable_per_iteration: true
+  asset_stress_default_trials: 10
+  asset_stress_default_required_passes: 10
+  shot_redesign_after_consecutive_failures:
+    minimum: 10
+    maximum: 15
+  redesign_options: [缩短镜头, 拆分动作, 减少人物, 更换角度, 转为画外, 改用反应或插入]
+  preserve: [请求, 参考资产, 模型与参数, 种子, 输出, 单次变化, 判定]
+
+daily_metrics:
+  - locked_shots
+  - usable_rate
+  - cost_per_locked_shot
+  - median_iterations_per_locked_shot
+  - failures_by_class
+  - queue_age
+  - continuity_blocks
+  - open_edit_gaps
+
+stages:
+  - id: S00
+    name: 证据与交付契约
+    trigger: 收到长片剧本或制作目标。
+    decision: 定义交付等级并用代表场景验证真实容量。
+    constraints: [生成窗口不等于端到端周期, 宣传数字不得替代本项目实验]
+    actions: [登记事实与假设, 选择三类代表场景, 执行端到端容量实验]
+    observations: [可用率, 锁镜耗时, 返工次数, 粗剪可用性]
+    rollback: 降低镜头数、动作复杂度、口型要求或交付等级后重估。
+    gate: 代表场景可剪且估算产能覆盖交付范围。
+    artifacts: [delivery-contract, evidence-register, risk-register, capacity-baseline]
+
+  - id: S01
+    name: 剧本编译与视觉宪法
+    trigger: S00 通过。
+    decision: 由剧情证据选择观众关系、场景原型和全片视觉弧。
+    constraints: [剧情证据高于类型默认和导演姓名, 先观众关系后视觉手段]
+    actions: [建立场景依赖图, 运行剧情到视觉编译器, 锁定不可变核心与弧变量]
+    observations: [规则的剧情证据, 场景间规则冲突, 破例数量]
+    rollback: 回到人物视点、信息差和戏剧转折重新建模。
+    gate: 视觉宪法、五段视觉弧和破例预算齐备。
+    artifacts: [scene-graph, film-constitution, visual-arc, exception-budget]
+
+  - id: S02
+    name: 正史资产与状态机
+    trigger: S01 通过。
+    decision: 识别复用资产并决定需要拆分的状态版本。
+    constraints: [身份资产保持中性, 角色服装道具地点分别版本化, 避免完整图反复重生成]
+    actions: [建立固定描述与引用, 创建版本和有效场次, 登记状态转换]
+    observations: [描述一致性, 状态完整性, 旧版本引用]
+    rollback: 重建中性主资产并保留旧版本追溯。
+    gate: 高频人物、地点、道具均有唯一正史和状态机。
+    artifacts: [asset-registry, identity-sheets, location-maps, state-transition-ledger]
+
+  - id: S03
+    name: 资产压力测试与锁定
+    trigger: S02 资产首版齐备。
+    decision: 按风险配置跨姿态、光线、角度与同框测试矩阵。
+    constraints: [关键资产默认十次测试, 以识别与组合稳定为准, 禁止无测试批量生产]
+    actions: [生成压力样本, 盲查身份与污染, 记录参数和判定]
+    observations: [通过率, 失败聚类, 跨资产污染率]
+    rollback: 单变量修改描述、参考或状态划分并重跑失败子集。
+    gate: 关键资产达到配置门槛且证据绑定锁定版本。
+    artifacts: [asset-stress-matrix, asset-test-log, locked-asset-manifest]
+
+  - id: S04
+    name: 场景合同与自动导演决策
+    trigger: 当前场景资产已锁定。
+    decision: 选择主原型、观众关系、覆盖语法、光色、焦段和相机行为。
+    constraints: [继承全片焦段族与颜色角色, 高中置信度执行唯一方案, 低置信度最多一个备选]
+    actions: [写 GEO 与轴侧, 编译方向决定, 标记继承弧变化或破例]
+    observations: [剧情证据可追溯性, 前后场状态兼容性, 置信度]
+    rollback: 回到观众关系与转折重新评分，不用导演姓名投票。
+    gate: 唯一首选、三条证据和连续性合同齐备。
+    artifacts: [direction-decision, scene-contract, geo-layout, color-light-contract]
+
+  - id: S05
+    name: 镜头计划与风险分层
+    trigger: S04 通过。
+    decision: 为每个节拍选择最少必要覆盖并进行风险分层。
+    constraints: [每镜一个故事功能, 每镜一个主动作, 每镜一个相机行为]
+    actions: [制作 animatic, 建立镜头卡, 设计锚点镜头与降级路径]
+    observations: [总时长, 覆盖缺口, 轴线与动作方向, 关键路径占用]
+    rollback: 删除低价值覆盖，拆镜或改用反应、插入、画外与声音。
+    gate: animatic 可理解、总量可交付、高风险镜头可降级。
+    artifacts: [animatic, shot-plan, shot-cards, risk-tier-map]
+
+  - id: S06
+    name: 镜头编译与首镜证明
+    trigger: 某场进入生成队列。
+    decision: 先证明人物、空间、色调和运动语法的锚点镜头。
+    constraints: [使用十五段提示合同, 人数资产首帧终点轴侧光向对白归属必填]
+    actions: [从镜头卡编译请求, 逐字继承常量, 生成并评审锚点镜头]
+    observations: [字段完整性, 模型控制匹配, 场景合同匹配]
+    rollback: 暂停批量并按资产、空间、动作、相机、工具顺序定位根因。
+    gate: 锚点镜头通过且连接前场已验收实际终点。
+    artifacts: [compiled-shot-request, anchor-shot, first-shot-verdict]
+
+  - id: S07
+    name: 批量生成与单变量迭代
+    trigger: S06 锚点通过。
+    decision: 按资产复用、剪辑关键路径和风险安排批次。
+    constraints: [一次只改一个主要变量, 保存完整迭代记录, 禁止无限重抽]
+    actions: [生成候选, 定向返工, 写迭代日志, 达阈值时重构镜头]
+    observations: [锁镜数, 可用率, 单锁镜成本, 失败分布, 队列老化]
+    rollback: 回到最近可接受版本；达到十至十五次连续失败后改变镜头设计。
+    gate: 所有镜头有状态，接受镜头写回正史，阻塞镜头有重构决定。
+    artifacts: [generation-log, candidate-set, accepted-shot, redesign-ticket]
+
+  - id: S08
+    name: 并行剪辑、声音与缺口回流
+    trigger: 首批接受镜头产生。
+    decision: 在真实时间线中区分必须补镜与可由剪辑声音关闭的缺口。
+    constraints: [从首批镜头开始剪, 连续环境声跨镜头, 单镜美感不凌驾可剪性]
+    actions: [更新每日粗剪, 修剪首尾余量, 铺声音床, 生成补镜队列]
+    observations: [叙事可理解性, 剪辑点, 动作声画连续性, 缺口关闭效率]
+    rollback: 回退到更少覆盖或更清晰动作，优先使用声音、反应与插入。
+    gate: 已生产场景均可播放，缺口有负责人和关闭条件。
+    artifacts: [daily-rough-cut, sound-bed, gap-list, pickup-queue]
+
+  - id: S09
+    name: 画面锁定与局部清理
+    trigger: 粗剪稳定且高价值缺口关闭。
+    decision: 只对确认保留的镜头按叙事显著性执行清理。
+    constraints: [画面锁定先于清理, 清理先于调色, 局部最小变更与穷举保留]
+    actions: [锁定画面, 清理脸手道具边缘与闪烁, 保存恢复版本]
+    observations: [身份纹理色彩连续性, 新伪影, 恢复可用性]
+    rollback: 回退原锁镜头，必要时改剪、缩短、遮挡或换反应镜头。
+    gate: 锁定版本可恢复且阻断性局部问题关闭。
+    artifacts: [picture-lock, cleanup-log, restoration-map, locked-master-timeline]
+
+  - id: S10
+    name: 统一母版、验收与学习写回
+    trigger: S09 通过。
+    decision: 按全片宪法完成调色声音母版并依据交付契约验收。
+    constraints: [相邻镜头先匹配, 后期不掩盖身份空间错误, 学习只来自可复核日志]
+    actions: [全片调色, 声音编辑混音, 字幕导出, 四类 QC 与归档]
+    observations: [阻断失败, 警告, 跨场抽检, 响度与技术指标]
+    rollback: 回到问题产生的最早阶段修复，而非在母版端遮盖。
+    gate: 零阻断失败，警告有接受理由，母版和源状态可恢复。
+    artifacts: [delivery-master, qc-report, archive-manifest, workflow-adjustments]

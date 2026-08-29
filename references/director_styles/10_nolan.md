@@ -135,7 +135,7 @@ negative_prompt_adds: [glowing holographic interface, floating blue data, neon s
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 风格锁定：诺兰式高概念结构。
@@ -151,13 +151,13 @@ negative_prompt_adds: [glowing holographic interface, floating blue data, neon s
 每个镜头只交代一个机制事实。禁止全息 UI、禁止霓虹、禁止慢动作抒情。
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 Controlled handheld follow, 21mm equivalent, camera roughly 80cm from the subject at eye level — close enough that the body has mass. One mechanism fact only: the subject <performs one timed action>, and a visible counter, gauge, or indicator changes state during the clip. Camera moves alongside at walking pace, no orbit, no acceleration for effect. Real materials in frame: poured concrete, steel, canvas, wet asphalt. Lighting is naturalistic, key ratio 3:1, from a practical work lamp camera-left and overcast daylight from a high opening; the only warm note is a sodium lamp deep in the background. End on the counter's new value clearly readable. Maintain the concrete-grey and steel-blue low-saturation palette, the same face, jacket, and hardware. Avoid holographic interfaces, floating blue data, neon signage, CGI sheen, slow motion, dreamy diffusion, lens flare.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 21mm-equivalent frame, eye level, camera close to the subject so the body reads as heavy. A single figure in practical working clothes stands against an oversized real structure of poured concrete and steel; horizon low in the frame so the sky carries weight. A mechanism is readable in the mid-ground — a gauge, a counter, a bolt assembly — with foreground hardware giving depth. Naturalistic light: overcast daylight from a high opening plus one practical work lamp camera-left, key ratio 3:1, no flare. Palette concrete grey, steel blue, black, canvas khaki, with one sodium-amber lamp in the far background; low saturation, mid contrast, fine film grain. 1.90:1. No text, no watermark, no holographic interface, no glowing blue data, no neon, no CGI sheen.

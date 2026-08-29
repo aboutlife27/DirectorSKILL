@@ -133,7 +133,7 @@ negative_prompt_adds: ["handheld shake", "camera orbit", "jump scare motion", "b
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 用希区柯克镜头设计以下场景：<一句话事件>
@@ -148,7 +148,7 @@ negative_prompt_adds: ["handheld shake", "camera orbit", "jump scare motion", "b
 输出：分镜表 + 一列"此刻观众比角色多知道什么"
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 [100mm | 135mm point-of-view | 50mm objective], [eye level | high overhead | low 0.4m], locked camera or a very slow dolly-in only.
@@ -160,7 +160,7 @@ End with [the exact frame the next cut will match]. Maintain [face, costume, obj
 Avoid: handheld shake, camera orbit, sudden lighting change, jump-scare motion, extra people, text, watermark.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 [Extreme close-up on the secret-bearing object | obstructed medium of the subject], 100mm, [eye level | overhead].

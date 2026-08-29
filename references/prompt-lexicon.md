@@ -1,6 +1,6 @@
 # Prompt Lexicon
 
-Load this file when you are writing the actual words of a keyframe or video prompt — pipeline Steps 8 and 10, output Modes E and F — or when a generation failed and you suspect the wording rather than the plan. For shot grammar itself see [cinematic-language.md](cinematic-language.md); for symptom-to-fix triage see [failure-modes.md](failure-modes.md); for per-tool control surfaces and the canonical prompt-shape templates see [ai-video-tool-adapters.md](ai-video-tool-adapters.md). This file owns words; that file owns shapes.
+Load this file when you are writing the actual words of a keyframe or video prompt — pipeline Steps 10 and 12, output Modes E and F — or when a generation failed and you suspect the wording rather than the plan. For shot grammar itself see [cinematic-language.md](cinematic-language.md); for symptom-to-fix triage see [failure-modes.md](failure-modes.md); for per-tool control surfaces and the canonical prompt-shape templates see [ai-video-tool-adapters.md](ai-video-tool-adapters.md). This file owns words; that file owns shapes.
 
 ## Thesis
 

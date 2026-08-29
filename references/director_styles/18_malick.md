@@ -137,7 +137,7 @@ negative_prompt_adds: ["locked tripod", "symmetrical composition", "orange colou
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 风格锁定：马力克式自然光抒情。
@@ -155,13 +155,13 @@ negative_prompt_adds: ["locked tripod", "symmetrical composition", "orange colou
 输出：片段表（编号 / 时长 / 景别 / 焦段 / 机位距离 / 漂移方向 / 手势 / 太阳方位 / 旁白句）
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 Handheld camera drifting slowly and continuously, as if carried by someone walking at about one metre per second — low-frequency float, no jitter, no stops, no locked frames. 21mm equivalent, camera about <40> centimetres from <the hand / the object>, so the foreground element is large and the horizon sits behind it. Over the clip the camera <drifts to the right and rises slightly, then tilts away from the face down to the hand>. The subject performs exactly one gesture: <reaching into the grass / lifting the hand into the light / letting the cloth fall open>, unhurried, unfinished at the end of the clip. One natural element stays in motion throughout: <wind moving through tall grass / water surface / hair backlit and lifting>. The sun sits just above the horizon directly behind the subject, flaring into the lens; the face is lit only by open sky and ground bounce, ratio 2.5:1, low contrast, lifted blacks. Keep the same face, clothing, palette of grass green, wheat gold and sky white. Avoid: locked tripod, symmetrical composition, orange filter look, hard shadows, studio lighting, camera jitter, slow motion, drone shot.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 21mm-equivalent frame taken from about 40 centimetres away, camera low and tilted slightly up, deliberately off-centre and asymmetric. Foreground: <a hand / an object held loosely>, very large in frame, slightly soft at the edge. Behind it the horizon and open sky fill the upper half. The sun sits three to ten degrees above the horizon directly behind the subject, flaring across the lens and washing the contrast down; the face and hand are lit only by sky and ground bounce, ratio 2.5:1, lifted blacks, low contrast, natural film response. Palette grass green, wheat gold, sky blue-white, skin, with a low amber note from the sun and deep blue in the shadows. Mid saturation. Nothing is composed symmetrically, nothing is centred, the subject is caught mid-gesture rather than posed. 2.39:1. No text, no watermark, no studio lighting, no hard shadows, no orange filter grade, no drone perspective.

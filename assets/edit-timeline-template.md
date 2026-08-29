@@ -1,6 +1,6 @@
 # Edit & Assembly Template (Mode I)
 
-Load this file when you are at Step 12 (edit and assembly plan) or the user asked for Mode I —
+Load this file when you are at Step 14 (edit and assembly plan) or the user asked for Mode I —
 the cut written as timecodes rather than intentions. Why a cut works, pacing theory, ASL
 reasoning, and transition *choice* are owned by
 [editing and assembly](../references/editing-and-assembly.md). Shot function and screen direction

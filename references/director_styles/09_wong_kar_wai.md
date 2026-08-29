@@ -136,7 +136,7 @@ negative_prompt_adds: [locked tripod stillness, symmetric center framing, even s
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 风格锁定：王家卫式都市错过。
@@ -153,13 +153,13 @@ negative_prompt_adds: [locked tripod stillness, symmetric center framing, even s
 结尾：错过、离开或没说出口。禁止解释、禁止和解、禁止对称构图。
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 Small-amplitude handheld reframing throughout — the operator adjusting, not shaking. 25mm equivalent, shot from a corner through a foreground obstruction (<door frame / railing / hanging curtain>) that stays fixed in the left third of the frame and covers part of the subject's body. The subject starts <state>, then performs one withdrawing action: <hand lowered / object moved to the other hand / a half step back>, rendered in step-printed slow motion — long-shutter trails behind the moving hand plus a repeated-frame stutter, not smooth interpolated slow motion — while the background stays at normal speed. Green neon spills from off-screen right onto the wet wall; warm tungsten from a corridor bulb rims the subject's cheek; smoke or steam drifts through the light beam. Framing stays off-center with the head cropped at the top edge; the face is never fully frontal. End with the subject still partly hidden behind the obstruction. Maintain the same face, clothing, object, the green-and-amber neon palette, the high-contrast wet surfaces. Avoid locked tripod stillness, symmetric composition, even soft fill light, smooth gimbal glide, clean unobstructed view, desaturated color.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 25mm-equivalent handheld frame, shot from a corner of a narrow humid corridor at night. A fixed foreground obstruction (<a door frame / a metal railing>) occupies the left third and crops the subject's torso. The subject is pushed to the right edge, seen in three-quarter profile, head cropped at the top of the frame, face two-thirds hidden. Practical lighting only: green neon leaking from a sign off-frame right onto a wet wall, plus a warm tungsten corridor bulb rimming the cheek; key ratio 8:1, hard sources, visible smoke in the beam. Palette neon green, deep red, tungsten amber with magenta accents, high saturation, high contrast, shadows deep but holding reflections on wet surfaces. 1.85:1. No text, no watermark, no symmetric framing, no even fill light, no dry clean surfaces, no fresh paint, no frontal portrait.

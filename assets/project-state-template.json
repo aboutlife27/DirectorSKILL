@@ -1,0 +1,151 @@
+{
+  "schema_version": "1.0",
+  "project": {
+    "id": "project-id",
+    "title": "片名",
+    "format": "feature",
+    "duration_minutes": 90
+  },
+  "visual_constitution": {
+    "intent": {
+      "audience_experience": "一句话说明观众整片应经历什么",
+      "visual_thesis": "一句可执行的全片视觉命题",
+      "directorial_voice": "功能性描述，不使用导演姓名"
+    },
+    "immutable_core": {
+      "aspect_ratio": "2.39:1",
+      "lens_family": [32, 50, 75],
+      "camera_support": ["tripod", "dolly"],
+      "palette_roles": {
+        "base": "世界的常态色及其叙事含义",
+        "character_a": "角色或观念 A 的颜色角色",
+        "character_b": "角色或观念 B 的颜色角色",
+        "consequence": "结果或代价出现时才允许的颜色"
+      },
+      "lighting_logic": "由场内光源驱动，保持主光方向连续",
+      "framing_rule": "人物关系优先于单人漂亮构图",
+      "texture": "克制的细颗粒与自然高光滚降",
+      "spatial_rule": "权力关系优先通过同框调度表达",
+      "performance_register": "内收，情绪通过动作受阻和呼吸显现",
+      "edit_rule": "情绪和故事优先于视觉炫技，动作完成后再切",
+      "sound_rule": "环境声承担空间连续性，音乐只进入结构转折"
+    },
+    "arc": [
+      {
+        "id": "open",
+        "range": [0.0, 0.2],
+        "dramatic_job": "建立秩序",
+        "scale_trend": "中远景占优",
+        "movement_trend": "稳定",
+        "contrast_trend": "中等",
+        "saturation_trend": "基准",
+        "sound_density_trend": "稀"
+      },
+      {
+        "id": "rise",
+        "range": [0.2, 0.45],
+        "dramatic_job": "压力累积",
+        "scale_trend": "逐步收紧",
+        "movement_trend": "短而受限",
+        "contrast_trend": "缓升",
+        "saturation_trend": "缓降",
+        "sound_density_trend": "渐密"
+      },
+      {
+        "id": "turn",
+        "range": [0.45, 0.65],
+        "dramatic_job": "认知或权力翻转",
+        "scale_trend": "近景占优",
+        "movement_trend": "一次有动机的破例",
+        "contrast_trend": "峰值前段",
+        "saturation_trend": "最低",
+        "sound_density_trend": "最密"
+      },
+      {
+        "id": "climax",
+        "range": [0.65, 0.9],
+        "dramatic_job": "不可逆选择",
+        "scale_trend": "极端尺度只服务关键一击",
+        "movement_trend": "趋于静止或彻底释放，二选一",
+        "contrast_trend": "峰值",
+        "saturation_trend": "结果色首次完整出现",
+        "sound_density_trend": "临界后骤减"
+      },
+      {
+        "id": "release",
+        "range": [0.9, 1.0],
+        "dramatic_job": "代价与余波",
+        "scale_trend": "回到远景但意义改变",
+        "movement_trend": "恢复稳定",
+        "contrast_trend": "回落",
+        "saturation_trend": "只保留结果色",
+        "sound_density_trend": "稀"
+      }
+    ],
+    "exception_budget": {
+      "per_act": 1,
+      "required_fields": ["field", "value", "reason_category", "reason", "scope", "restore_at"],
+      "allowed_reason_categories": ["narrative_turn", "pov_break", "world_rule_change"],
+      "policy": {
+        "categories_are_schema_locked": true,
+        "scope": "从声明场景开始的连续真实场景 ID 数组",
+        "restore_at": "scope 后紧邻的真实场景，且该字段显式恢复 canonical 值"
+      }
+    },
+    "forbidden_drift": [
+      "无叙事理由更换基础焦段族",
+      "只为画面更酷而改变相机支撑方式",
+      "把颜色角色降级为每场随意的情绪滤镜",
+      "同一时间地点内翻转主光方向",
+      "未登记便改变表演幅度或剪辑语法"
+    ]
+  },
+  "canonical": {
+    "characters": {},
+    "locations": {},
+    "props": {}
+  },
+  "scenes": [
+    {
+      "id": "S01",
+      "act": 1,
+      "arc_position": 0.05,
+      "dramatic_function": "建立表面秩序",
+      "archetype": "建立",
+      "inherit": {
+        "aspect_ratio": "2.39:1",
+        "lens_family": [32, 50, 75],
+        "camera_support": ["tripod", "dolly"],
+        "palette_roles": {
+          "base": "世界的常态色及其叙事含义",
+          "character_a": "角色或观念 A 的颜色角色",
+          "character_b": "角色或观念 B 的颜色角色",
+          "consequence": "结果或代价出现时才允许的颜色"
+        },
+        "lighting_logic": "由场内光源驱动，保持主光方向连续",
+        "framing_rule": "人物关系优先于单人漂亮构图",
+        "texture": "克制的细颗粒与自然高光滚降",
+        "spatial_rule": "权力关系优先通过同框调度表达",
+        "performance_register": "内收，情绪通过动作受阻和呼吸显现",
+        "edit_rule": "情绪和故事优先于视觉炫技，动作完成后再切",
+        "sound_rule": "环境声承担空间连续性，音乐只进入结构转折"
+      },
+      "overrides": [],
+      "state_resets": [],
+      "shots": [
+        {
+          "id": "S01-01",
+          "status": "planned",
+          "planned_start": {
+            "character_pose": "人物停在门外",
+            "prop": "信封在右手"
+          },
+          "planned_end": {
+            "character_pose": "人物进入房间",
+            "prop": "信封仍在右手"
+          }
+        }
+      ]
+    }
+  ]
+}

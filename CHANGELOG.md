@@ -6,6 +6,44 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-08-30
+
+### Added
+
+- 本地优先制片控制内核：Python 标准库 CLI、SQLite 执行账本和内容寻址媒体仓库。
+- 制片控制模式 K，由 Codex 领取 JSON 任务包、调用模型、回填候选并持续推进。
+- 视觉宪法、核心资产、样片镜头和画面锁定四个人工审批门，前置证据与顺序由内核强制校验。
+- 候选版本、模型/提示词/种子元数据、输入快照哈希、上游变化后的下游失效传播。
+- 任务租约、中断恢复、机器可读状态和带素材血缘及审批记录的最终交付清单。
+- 可校验的 `production-plan-template.json`、操作参考文档和端到端回归测试。
+
+### Changed
+
+- 自动化默认采用引导式分级执行；在真实链路未证明稳定前，不提供无人值守承诺。
+- A–J 继续负责导演与生成决策，K 只负责执行控制，后续 Web 制片台复用同一状态机。
+
+## [2.2.0] - 2026-08-29
+
+### Added
+
+- 《Hell Grind》公开工作流证据审计，区分一手材料、利益相关方自述、外部评论、推导与未知项。
+- 厂商无关的 11 阶段 AI 长片生产闭环，每阶段包含触发、判定、约束、执行、观测、回滚、阶段门与产物。
+- 机器可读的 `ai-feature-production-runbook.yaml`，包含证据、一致性、生成窗口、单变量迭代和每日指标协议。
+- 两个行为评测和结构回归测试，覆盖案例审计与长片工作流契约。
+
+### Changed
+
+- 版本提升至 2.2.0；新增《Hell Grind》审计与长片运行路由。
+- 明确阶段 0-5 必须在集中生成窗口前通过，两周生成日历从阶段 6 首镜证明开始。
+- 自动分镜、色调、焦段与拍法由剧情证据选择，并受视觉宪法、视觉弧和已验收镜头状态约束。
+
+### Fixed
+
+- 固定视觉破例理由类别；scope 必须是同一幕内连续存在的场景，恢复点必须紧邻并显式恢复 canonical 值。
+- 已验收镜头的计划起点和实际起点均须继承最近已验收实际终点，拒绝镜头不再污染连续性祖先。
+- 视觉宪法 YAML、项目状态 JSON 与运行手册现在共享完全一致的不可变核心默认值。
+- 行为回归测试锁定集中生成窗口的前置门、S06 起点、S06-S08 主范围及失败后的降级语义。
+
 ## [2.0.0] - 2026-07-27
 
 A depth release. v1.x knew the vocabulary of directing; v2 knows the craft behind it — lens choice, lighting ratios, continuity geometry, staging, sound, editing, and the operational reality of running a generation queue. The pipeline grew from 10 steps to 13, output modes from 6 to 10, references from 4 to 12, director lenses from 14 to 20, and `SKILL.md` gained an explicit routing table so depth loads on demand instead of all at once.
@@ -127,7 +165,8 @@ Findings from an adversarial verification pass and three live dry runs of the fi
 - `evals/evals.json` with 3 baseline cases.
 - Bilingual README (EN + 中文), MIT license.
 
-[Unreleased]: https://github.com/wuwangzhang1216/DirectorSKILL/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/wuwangzhang1216/DirectorSKILL/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/wuwangzhang1216/DirectorSKILL/compare/v2.0.0...v2.2.0
 [2.0.0]: https://github.com/wuwangzhang1216/DirectorSKILL/compare/v1.2.0...v2.0.0
 [1.2.0]: https://github.com/wuwangzhang1216/DirectorSKILL/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/wuwangzhang1216/DirectorSKILL/compare/v1.0.0...v1.1.0

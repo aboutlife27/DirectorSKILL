@@ -1,8 +1,23 @@
 # Shot Plan Template
 
-Load this file when you are at Step 7 (shot list and coverage) or the user asked for Mode D — a shot list, 分镜表, storyboard table, or "give me the shots".
+Load this file when you are at Step 9 (shot list and coverage) or the user asked for Mode D — a shot list, 分镜表, storyboard table, or "give me the shots".
 
 Build rows only after the beats exist ([beat sheet](beat-sheet-template.md)) and the rules exist ([director book](director-book-template.md)). A shot plan written before those two is a list of pictures.
+
+多场景项目还必须先声明场景视觉合同：
+
+```yaml
+scene_contract:
+  scene_id: S01
+  arc_position: 0.18
+  primary_archetype: 亲密
+  inherit: [lens_family, camera_support, palette_roles, lighting_logic]
+  arc_adjustments: {}
+  local_state: {}
+  overrides: []
+```
+
+表中每项局部选择必须属于 `inherit`、`arc_adjustments` 或已登记的 `overrides`；不能出现来源不明的焦段、色调或相机行为。
 
 ## Shot table
 
@@ -37,7 +52,7 @@ Risk is a generation budget, not commentary. Score the six dimensions and read t
 
 In the worked example below the bands read 01 Green, 02 Amber, 03 Green, 04 Red, 05 Green. Shot 04 scores 12 — action 3, people 1, camera 1, duration 2, interaction 3, continuity 2 — and it also trips the contact override, because the envelope passes between his hand and the door and the rubric counts a prop passing between a subject and a fixed feature as contact. The override is the useful half of that reading: a 3-on-interaction plus 3-on-anything pair does not come down with a better prompt, only with the split already written into its Gen note.
 
-One Red in five is a plan. Three Reds in five is a wish — go back to Step 5 and lower the ambition, or split those shots on paper now rather than after a day of failed generations.
+One Red in five is a plan. Three Reds in five is a wish — go back to Step 7 and lower the ambition, or split those shots on paper now rather than after a day of failed generations.
 
 ## Worked example
 
@@ -78,7 +93,7 @@ Read the plan column-wise before you read it row-wise. Each of these catches a d
 - Track screen direction down the page. In the example the courier faces camera-right at the door in every row; the first row that reverses that owes the audience a neutral shot or a cutaway.
 - Confirm the scene has an entry the audience can orient in and an exit they can leave on. A scene that starts on an insert and ends on an insert has no geography.
 
-Each row hands Step 8 (keyframes) its Frame content, Size, Lens, Light dir and Continuity anchors, and hands Step 10 (video prompts) its Blocking, Move, end state and Gen note. If a cell is empty, the downstream prompt will invent something in its place.
+Each row hands Step 10 (keyframes) its Frame content, Size, Lens, Light dir and Continuity anchors, and hands Step 12 (video prompts) its Blocking, Move, end state and Gen note. If a cell is empty, the downstream prompt will invent something in its place.
 
 ## Rules
 

@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Claude Skill](https://img.shields.io/badge/Claude_Skill-cinematic--director-blue)
-![Version](https://img.shields.io/badge/version-2.0.0-green)
+![Version](https://img.shields.io/badge/version-2.3.0-green)
 [![markdownlint](https://github.com/wuwangzhang1216/DirectorSKILL/actions/workflows/markdownlint.yml/badge.svg)](https://github.com/wuwangzhang1216/DirectorSKILL/actions/workflows/markdownlint.yml)
 [![links](https://github.com/wuwangzhang1216/DirectorSKILL/actions/workflows/links.yml/badge.svg)](https://github.com/wuwangzhang1216/DirectorSKILL/actions/workflows/links.yml)
 
@@ -25,24 +25,29 @@ This skill replaces adjective soup with **directorial reasoning**:
 - **Failures get diagnosed, not re-rolled.** Nineteen coded failure modes, each with its mechanism, its ranked causes, and the cheapest fix that addresses it.
 - **Style is a lens**, not a costume. Choosing Kubrick means wide-angle one-point perspective pressing people into architecture — not "add a zoom."
 
-## What's new in 2.0
+## What's new in 2.3
+
+> **2.3 本地制片控制内核：** 新增由 Codex 驱动的制片控制模式 K、SQLite 执行账本、内容寻址媒体仓库、四个人工审批门、任务租约恢复、候选版本与失效传播。第一版不直连供应商，Codex 通过 JSON 命令领取任务、调用模型并回填结果。入口见 [`references/production-control-plane.md`](references/production-control-plane.md) 和 [`assets/production-plan-template.json`](assets/production-plan-template.json)。
+
+> **2.2 长片工作流资产：** 新增《Hell Grind》公开工作流证据审计、厂商无关的 11 阶段 AI 长片闭环、机器可读运行模板，以及由剧情证据自动选择分镜/色调/拍法并由全片视觉宪法约束的一致性系统。入口见 [`references/hell-grind-workflow.md`](references/hell-grind-workflow.md)、[`references/ai-feature-production-playbook.md`](references/ai-feature-production-playbook.md) 和 [`assets/ai-feature-production-runbook.yaml`](assets/ai-feature-production-runbook.yaml)。
 
 v1 knew the vocabulary of directing. v2 knows the craft behind it.
 
-| | v1.2 | v2.0 |
+| | v1.2 | v2.3 |
 |---|---|---|
-| Pipeline | 10 steps | 13 steps — adds intake/scope, sound & dialogue, edit & assembly |
-| Output modes | 6 | 10 — adds beat sheet, director's book, sound plan, edit plan |
-| Reference files | 4 | 13 |
+| Directing pipeline | 10 steps | 15 steps — adds intake/scope, a film visual constitution, automatic visual direction, sound/dialogue, and edit/assembly |
+| Feature-production loop | — | 11 gated stages from evidence and capacity through master/QC |
+| Output modes | 6 | 11 — adds beat sheet, director's book, sound plan, edit plan, production control |
+| Top-level reference files | 4 | 19 |
 | Director lenses | 14 | 20 |
-| Templates | 4 | 8, all with filled worked examples |
+| Assets and templates | 4 | 12, including worked examples and machine-readable contracts |
 | Context strategy | load everything | routing table — `SKILL.md` stays lean, depth loads on demand |
 | Tool handling | six named adapters | capability-first routing + four prompt shapes + twelve adapter families |
 | Failure handling | a checklist | coded manual F1–F19, cost ladder, three-strike rule |
 
 Also new: lens and focal-length psychology, lighting ratios, continuity geometry (axis of action, the 30° rule, screen direction, eyeline match) with the AI-specific problem that a video model has no idea where the last shot put the camera, a staging-geometry library, per-genre playbooks, a controlled prompt lexicon with an EN↔中文 term table, and the operational side — shot difficulty scoring, retry budgets, versioning, and handoff.
 
-See [CHANGELOG.md](CHANGELOG.md) for the full list. The step renumbering (10→13) and mode renumbering (A–F→A–J) are breaking changes.
+See [CHANGELOG.md](CHANGELOG.md) for the full list. The directing pipeline remains A–J; mode K adds staged execution and production state.
 
 ## Architecture
 
@@ -53,13 +58,14 @@ See [CHANGELOG.md](CHANGELOG.md) for the full list. The step renumbering (10→1
 │    routing table:  request type → output mode → files to load          │
 │    hard rules · intake schema · defaults · self-check                  │
 │                                                                        │
-│    1  Intake & scope           8  Keyframe strategy                    │
-│    2  Script & subtext         9  Tool adapter selection               │
-│    3  Beat map                10  AI video prompt construction         │
-│    4  Style lens (optional)   11  Sound & dialogue plan                │
-│    5  Director's book         12  Edit & assembly plan                 │
-│    6  Blocking & staging      13  QC & repair loop                     │
-│    7  Shot list & coverage                                             │
+│    1  Intake & scope           9  Shot list & coverage                 │
+│    2  Script & subtext        10  Keyframe strategy                    │
+│    3  Beat map                11  Tool adapter selection               │
+│    4  Film constitution       12  AI video prompt construction         │
+│    5  Automatic direction     13  Sound & dialogue plan                │
+│    6  Style lens (optional)   14  Edit & assembly plan                 │
+│    7  Director's book         15  QC, repair & state write-back        │
+│    8  Blocking & staging                                               │
 └────────────────────────────────────────────────────────────────────────┘
                     │ loads on demand, never all at once
         ┌───────────┴────────────────────────────────┐
@@ -74,6 +80,9 @@ See [CHANGELOG.md](CHANGELOG.md) for the full list. The step renumbering (10→1
 │     editing-and-assembly      │      │   sound-plan          Mode H│
 │     genre-playbooks           │      │   edit-timeline       Mode I│
 │     product-and-macro         │      │   qc-checklist        Mode J│
+│   feature production          │      │   feature runbook       YAML│
+│     Hell Grind audit          │      │   visual constitution   YAML│
+│     11-stage playbook         │      │   project state         JSON│
 │   generation                  │      └─────────────────────────────┘
 │     prompt-lexicon            │
 │     ai-video-tool-adapters    │
@@ -86,7 +95,7 @@ See [CHANGELOG.md](CHANGELOG.md) for the full list. The step renumbering (10→1
 └───────────────────────────────┘
 ```
 
-**One skill, optional style overlay.** `SKILL.md` is always the entry point. When the user names a director, Step 4 loads exactly one style file, and its `风格参数` YAML block overrides defaults at Steps 5, 7, 8, and 10. Style files are reference modules — they are *not* separately registered skills, so the host agent never has to disambiguate.
+**One skill, optional style overlay.** `SKILL.md` is always the entry point. When the user names a director, Step 6 loads exactly one style file. Its `风格参数` block may influence the director's book, shot plan, keyframes, and motion prompts only within the bounds set by the film visual constitution. Style files are reference modules — they are *not* separately registered skills, so the host agent never has to disambiguate.
 
 ## Installation
 
@@ -120,7 +129,7 @@ Produces: beat map → director's book with invariant clauses → shot list (sto
 You: Same scene, but direct it in the style of Wong Kar-wai.
 ```
 
-Step 4 loads `references/director_styles/09_wong_kar_wai.md` and its parameter block overrides the defaults: handheld in narrow corridors, neon practicals, frame-within-frame through doorways, a step-printed beat on the slip-and-leave, voice-over from the courier, a shorter average shot length. Same four shots, a different film.
+Step 6 loads `references/director_styles/09_wong_kar_wai.md` and applies its parameter block within the film constitution: handheld in narrow corridors, neon practicals, frame-within-frame through doorways, a step-printed beat on the slip-and-leave, voice-over from the courier, a shorter average shot length. Same four shots, a different film.
 
 ### Repairing a failed clip
 
@@ -138,6 +147,14 @@ You: I have 8 clips. Two don't match. Give me an edit plan.
 ```
 
 Mode I: a timeline with in/out points, trim handles, transitions built from paired last/first frames, a continuous audio bed under the whole sequence, and the specific fix-in-edit patch for the two that don't match.
+
+### 通过 Codex 运行制片项目
+
+```text
+你：按一键制片方式启动这个长片项目。先建立计划和视觉宪法，到了审批门停下来给我看。
+```
+
+模式 K 会建立本地项目，登记剧本，导入任务图，然后由 Codex 循环执行 `next → 模型调用 → submit → review → status`。视觉宪法、核心资产、样片镜头和画面锁定四个门必须由用户批准；中断后可恢复，最终导出带素材血缘与审批记录的交付清单。
 
 ## Director style overlays
 
@@ -199,7 +216,7 @@ Modes combine. A full production pass is A→B→C→D→E→F→H→I with G un
 
 ```text
 cinematic-director/
-├── SKILL.md                              # Main pipeline: 13 steps, modes A-J, routing table
+├── SKILL.md                              # Main pipeline: 15 steps, modes A-K, routing table
 ├── README.md                             # This file
 ├── CONTRIBUTING.md                       # How to add directors / adapters / genres / failure codes
 ├── CHANGELOG.md                          # Release history
@@ -218,6 +235,8 @@ cinematic-director/
 │   ├── image-model-adapters.md           # Image model surfaces, character/location consistency
 │   ├── continuity-bible.md               # Character/location/prop/shot schemas + worked example
 │   ├── production-workflow.md            # Operating loop, difficulty rubric, versioning, handoff
+│   ├── hell-grind-workflow.md             # Evidence-graded public-case audit
+│   ├── ai-feature-production-playbook.md  # 11-stage feature-production loop
 │   └── director_styles/                  # 20 style overlays + index + comparisons
 ├── assets/
 │   ├── beat-sheet-template.md            # Mode B
@@ -227,7 +246,10 @@ cinematic-director/
 │   ├── video-prompt-template.md          # Mode F
 │   ├── sound-plan-template.md            # Mode H
 │   ├── edit-timeline-template.md         # Mode I
-│   └── qc-checklist.md                   # Mode J
+│   ├── qc-checklist.md                   # Mode J
+│   ├── ai-feature-production-runbook.yaml # Machine-readable feature workflow
+│   ├── film-visual-constitution.yaml      # Film-wide immutable and arc contract
+│   └── project-state-template.json       # Canonical continuity state contract
 └── evals/
     └── evals.json                        # Behavior contract
 ```
@@ -238,7 +260,7 @@ cinematic-director/
 - **Add a video or image tool**: append an adapter block plus a matrix column. No `SKILL.md` change needed unless the tool shifts a global default.
 - **Add a genre**: append a block to `references/genre-playbooks.md` using the same fixed field set, plus a row in the comparison table.
 - **Add a failure code**: F-codes are append-only; add F19+ with symptom, ranked causes, cost-ordered fixes, and a before/after pair.
-- **Add an output mode**: only if genuinely distinct from A–J.
+- **Add an output mode**: only if genuinely distinct from A–K.
 - **Add an eval**: append a case to `evals/evals.json`.
 
 Full contributor guide: [CONTRIBUTING.md](CONTRIBUTING.md).
@@ -263,7 +285,7 @@ The MIT grant covers the skill files. The usage rule above governs *how* you app
 
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Skill](https://img.shields.io/badge/Claude_Skill-cinematic--director-blue)
-![版本](https://img.shields.io/badge/version-2.0.0-green)
+![版本](https://img.shields.io/badge/version-2.3.0-green)
 [![lint](https://github.com/wuwangzhang1216/DirectorSKILL/actions/workflows/markdownlint.yml/badge.svg)](https://github.com/wuwangzhang1216/DirectorSKILL/actions/workflows/markdownlint.yml)
 [![link check](https://github.com/wuwangzhang1216/DirectorSKILL/actions/workflows/links.yml/badge.svg)](https://github.com/wuwangzhang1216/DirectorSKILL/actions/workflows/links.yml)
 
@@ -282,24 +304,29 @@ The MIT grant covers the skill files. The usage rule above governs *how* you app
 - **失败要诊断，不要重摇**。19 个编码失败模式，每个都有机制、按概率排序的成因和成本最低的有效修复。
 - **风格是镜头，不是外套**。选库布里克意味着用广角单点透视把人压进建筑——不是"多加个推镜"。
 
-## 2.0 有什么新东西
+## 2.3 有什么新东西
+
+2.3 新增本地制片控制内核和模式 K。导演技能负责把剧情编译成资产、分镜和生成任务；控制内核负责执行账本、任务依赖、候选版本、四个人工审批门、输入快照、失效传播、中断恢复和最终交付。第一版由 Codex 调用模型，不假装已经做到无人值守。
+
+2.2 新增《Hell Grind》公开工作流证据审计、厂商无关的 11 阶段 AI 长片生产闭环、机器可读运行模板，以及由剧情证据自动选择分镜、色调和拍法并由全片视觉宪法约束的一致性系统。
 
 v1 掌握的是导演的词汇，v2 掌握的是词汇背后的手艺。
 
-| | v1.2 | v2.0 |
+| | v1.2 | v2.3 |
 |---|---|---|
-| 流水线 | 10 步 | 13 步——新增需求梳理、声音与对白、剪辑与合成 |
-| 输出模式 | 6 种 | 10 种——新增节拍表、导演书、声音方案、剪辑方案 |
-| 参考文件 | 4 个 | 13 个 |
+| 导演流水线 | 10 步 | 15 步——新增需求梳理、全片视觉宪法、自动视觉导演、声音与对白、剪辑与合成 |
+| 长片生产闭环 | — | 11 个带阶段门的阶段，从证据与容量到母版/QC |
+| 输出模式 | 6 种 | 11 种——新增节拍表、导演书、声音方案、剪辑方案、制片控制 |
+| 顶层参考文件 | 4 个 | 19 个 |
 | 导演风格 | 14 位 | 20 位 |
-| 模板 | 4 个 | 8 个，全部带已填好的实例 |
+| 资产与模板 | 4 个 | 12 个，包含实例与机器可读契约 |
 | 上下文策略 | 全量加载 | 路由表——`SKILL.md` 保持精简，深度按需加载 |
 | 工具处理 | 6 个具名适配器 | 能力优先路由 + 4 种提示词形态 + 12 个适配器家族 |
 | 失败处理 | 一张清单 | 编码手册 F1–F19、成本阶梯、三振规则 |
 
 另外新增：焦距心理学、光比、连贯性几何（动作轴线、30 度规则、画面方向、视线匹配）以及"视频模型根本不知道上一镜机位在哪"这个 AI 专属难题的解法、调度几何库、类型片手册、受控提示词词库（含中英术语对照表），以及运营侧内容——镜头难度评分、重试预算、版本管理和交付包。
 
-完整列表见 [CHANGELOG.md](CHANGELOG.md)。步骤重编号（10→13）与模式重编号（A–F→A–J）是破坏性变更。
+完整列表见 [CHANGELOG.md](CHANGELOG.md)。导演流水线保持 A–J，模式 K 负责分级执行和制片状态。
 
 ## 架构
 
@@ -310,13 +337,14 @@ v1 掌握的是导演的词汇，v2 掌握的是词汇背后的手艺。
 │    路由表：需求类型 → 输出模式 → 该加载哪些文件                          │
 │    硬规则 · 输入 schema · 默认值 · 自检清单                              │
 │                                                                        │
-│    1  需求梳理与范围        8  关键帧策略                                │
-│    2  剧本与潜文本          9  工具适配器选择                            │
-│    3  节拍图               10  AI 视频提示词构造                         │
-│    4  导演风格镜头（可选）  11  声音与对白方案                            │
-│    5  导演书               12  剪辑与合成方案                            │
-│    6  走位与调度           13  QC 与修复                                 │
-│    7  分镜表与覆盖策略                                                   │
+│    1  需求梳理与范围        9  分镜表与覆盖策略                           │
+│    2  剧本与潜文本         10  关键帧策略                                 │
+│    3  节拍图               11  工具适配器选择                             │
+│    4  全片视觉宪法         12  AI 视频提示词构造                          │
+│    5  自动视觉导演         13  声音与对白方案                             │
+│    6  导演风格镜头（可选） 14  剪辑与合成方案                             │
+│    7  导演书               15  QC、修复与状态写回                         │
+│    8  走位与调度                                                        │
 └────────────────────────────────────────────────────────────────────────┘
                     │ 按需加载，绝不一次全读
         ┌───────────┴────────────────────────────────┐
@@ -331,6 +359,9 @@ v1 掌握的是导演的词汇，v2 掌握的是词汇背后的手艺。
 │     editing-and-assembly      │      │   声音方案          Mode H  │
 │     genre-playbooks           │      │   剪辑时间线        Mode I  │
 │     product-and-macro         │      │   QC 清单           Mode J  │
+│   长片生产                    │      │   长片运行模板        YAML  │
+│     Hell Grind 案例审计       │      │   全片视觉宪法        YAML  │
+│     11 阶段生产手册           │      │   项目状态            JSON  │
 │   生成                        │      └─────────────────────────────┘
 │     prompt-lexicon            │
 │     ai-video-tool-adapters    │
@@ -343,7 +374,7 @@ v1 掌握的是导演的词汇，v2 掌握的是词汇背后的手艺。
 └───────────────────────────────┘
 ```
 
-**一个 skill，可选风格叠加。** `SKILL.md` 始终是入口。用户点名导演时，Step 4 只加载一个风格文件，其 `风格参数` YAML 块覆盖 Step 5 / 7 / 8 / 10 的默认值。风格文件是参考模块——它们*不会*被宿主 agent 单独注册为 skill，不会产生歧义。
+**一个 skill，可选风格叠加。** `SKILL.md` 始终是入口。用户点名导演时，第 6 步只加载一个风格文件；风格参数只能在全片视觉宪法允许的范围内覆盖后续导演书、分镜、关键帧和视频提示默认值。风格文件是参考模块——它们*不会*被宿主 agent 单独注册为 skill，不会产生歧义。
 
 ## 安装
 
@@ -376,7 +407,7 @@ git clone https://github.com/wuwangzhang1216/DirectorSKILL.git .claude/skills/ci
 你：同一场戏，用王家卫的风格来拍。
 ```
 
-Step 4 加载 `references/director_styles/09_wong_kar_wai.md`，用它的参数块覆盖默认值：狭窄走廊的手持、霓虹实用光源、门框构成的画中画、塞信离开这一拍的抽格慢动作、信差的独白、更短的平均镜头长度。同样 4 个镜头，另一部电影。
+第 6 步加载 `references/director_styles/09_wong_kar_wai.md`，并在全片视觉宪法允许的范围内应用参数块：狭窄走廊的手持、霓虹实用光源、门框构成的画中画、塞信离开这一拍的抽格慢动作、信差的独白、更短的平均镜头长度。同样 4 个镜头，另一部电影。
 
 ### 修复失败的生成
 
@@ -447,8 +478,9 @@ Mode I：带出入点、留头留尾、由配对首尾帧构造的转场、贯�
 | H | 声音与对白方案 | 声音设计、音乐、对白、旁白 |
 | I | 剪辑与合成方案 | 把生成的素材剪成序列 |
 | J | QC 与修复 | 出了问题或看着不对 |
+| K | 制片控制 | 任务领取、模型回填、版本、审批门、恢复与交付 |
 
-模式可组合。完整制作流程通常是 A→B→C→D→E→F→H→I，G 在底下贯穿，J 收尾。
+模式可组合。完整制作流程通常是 A→B→C→D→E→F→H→I，G 在底下贯穿，J 收尾；需要实际持续运行时由 K 管理整个闭环。
 
 ## 扩展方式
 
@@ -456,7 +488,7 @@ Mode I：带出入点、留头留尾、由配对首尾帧构造的转场、贯�
 - **加视频/图像工具**：追加一段适配器加一列能力矩阵。除非该工具改变了全局默认值，否则不用动 `SKILL.md`。
 - **加类型片**：在 `references/genre-playbooks.md` 追加一块，字段集与现有类型一致，并在对比表加一行。
 - **加失败代码**：F 编码只增不改，从 F19 起，四个区块齐全。
-- **加输出模式**：只有真正区别于 A–J 时才加。
+- **加输出模式**：只有真正区别于 A–K 时才加。
 - **加 eval**：在 `evals/evals.json` 追加用例。
 
 完整贡献指南见 [CONTRIBUTING.md](CONTRIBUTING.md)。

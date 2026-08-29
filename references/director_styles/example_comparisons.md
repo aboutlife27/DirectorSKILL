@@ -4,7 +4,7 @@ Every style module in this directory directs the **same** control scene, so the 
 
 Read it to feel what a style overlay actually changes — blocking, shot count, lens, light, palette, sound, and the prompt that comes out the other end — and what it does not: the dramatic situation, the continuity discipline, and the requirement that every shot earn its place.
 
-Load it at Step 4 (style lens selection) when the user names two directors and one has to be chosen, or when someone asks what "in the style of X" concretely buys. Every number below is quoted from the named module's `风格参数` block or its worked example; when the two disagree, the module wins and this file is stale.
+Load it at Step 6 (style reference selection) when the user names two directors and one has to be chosen, or when someone asks what "in the style of X" concretely buys. Every number below is quoted from the named module's `风格参数` block or its worked example; when the two disagree, the module wins and this file is stale.
 
 > Usage rule: these treatments describe high-level methods only. None copies specific shots, dialogue, characters, or plots from any real film. Use them as lenses for original work.
 

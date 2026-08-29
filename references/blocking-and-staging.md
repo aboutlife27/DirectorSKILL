@@ -1,6 +1,6 @@
 # Blocking and Staging
 
-Load this file when you reach Step 6 (Blocking & staging), when a scene puts two or more bodies in one space, when a shot row needs start/end positions, or when a generated clip contains correct-looking people doing nothing that means anything.
+Load this file when you reach Step 8 (Blocking & staging), when a scene puts two or more bodies in one space, when a shot row needs start/end positions, or when a generated clip contains correct-looking people doing nothing that means anything.
 
 Owns: staging geometry, proxemics, power blocking, entrances and exits, eyeline as an instruction to the audience, blocking notation, blocking-to-prompt translation. Shot size, angle, lens psychology, composition, and coverage geometry — the axis of action (180-degree rule), the 30-degree rule, screen direction, eyeline match — belong to [cinematic-language.md](cinematic-language.md).
 

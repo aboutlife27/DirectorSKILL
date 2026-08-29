@@ -136,7 +136,7 @@ negative_prompt_adds: [street signage, on-screen text, cyberpunk crowd, rain-sli
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 风格锁定：雷弗恩式霓虹仪式。
@@ -152,13 +152,13 @@ negative_prompt_adds: [street signage, on-screen text, cyberpunk crowd, rain-sli
 结尾：停在姿势上。禁止解释、禁止反应镜头、禁止招牌文字、禁止前景遮挡。
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 The camera does not move at all — locked, frontal, perfectly symmetric, 40mm equivalent at chest height, perpendicular to the back wall, the subject's centre line exactly on frame centre. The subject does not walk and does not change position; they hold a single sculptural pose for the whole clip and blink exactly once. The only motion in the frame is light: a hard-edged magenta wash fills the left half and an electric blue wash fills the right half, and over about six seconds in the middle of the clip the magenta side slowly shifts toward cyan while the boundary between the two colours stays exactly where it is. Key ratio 10:1, stage-hard sources, large areas of pure black, high saturation, high contrast, no diffusion. Flat frontal plane, no depth cues, nothing else in the frame. End on the same symmetric composition, the subject unmoved. Maintain the same face, costume, pose, and the hard colour boundary. Avoid street signage, on-screen text, cyberpunk crowds, rain-slick streets, handheld shake, soft diffused fill, pastel desaturation, foreground obstruction.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 40mm-equivalent frontal frame, chest height, perpendicular to a flat back wall, absolute bilateral symmetry, subject dead centre with their centre line on the frame's centre line. Flat plane, no depth cues, no props, no clutter. Lighting is stage-hard: a magenta wash filling the left half and an electric blue wash filling the right half, with a visible hard boundary between them running slightly right of frame centre, falling exactly along the vertical edge of a door frame so it reads as designed rather than as a lighting error; key ratio 10:1; large areas of pure black at the edges used as material. High saturation, high contrast, skin colour fully taken over by the wash so the body reads as a coloured shape. Sculptural, expressionless pose, hands visible and deliberately placed. 2.39:1. No text, no signage, no crowd, no rain, no soft diffused fill, no pastel grading, no foreground obstruction.

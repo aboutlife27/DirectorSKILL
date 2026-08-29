@@ -139,7 +139,7 @@ negative_prompt_adds: ["handheld shake", "flat grey walls", "empty minimalist se
 
 ## 提示词模板 / Prompt templates
 
-镜头设计简报（中文，用于 Step 5 导演本与 Step 7 分镜）：
+镜头设计简报（中文，用于 Step 7 导演本与 Step 9 分镜）：
 
 ```text
 风格锁定：朴赞郁式巴洛克复仇。
@@ -156,13 +156,13 @@ negative_prompt_adds: ["handheld shake", "flat grey walls", "empty minimalist se
 输出：分镜表（编号 / 时长 / 景别 / 焦段 / 角度 / 运动路径 / 图案清单 / 光比 / 连续性锚点）
 ```
 
-Image-to-video motion prompt（英文，用于 Step 10，接关键帧）：
+Image-to-video motion prompt（英文，用于 Step 12，接关键帧）：
 
 ```text
 One continuous choreographed camera move: begin <90-degree overhead on the object, lens about 0.85m above it>, then descend <0.7> metres, pull back to about <2.2> metres from the figure and rotate <90> degrees — all three at once, one constant speed, no handheld texture, no acceleration at the ends — ending <frontal, chest height, perfectly symmetrical on the figure>. 40mm equivalent throughout, no zoom, f/5.6, medium depth of field so every pattern stays legible. The room contains three distinct large-scale patterns: <wallpaper motif>, <fabric>, and <tile or carved wood>. The figure performs exactly one composed, courteous action: <sits / sets down the cup / folds the cloth>, and holds a pleasant expression for one beat longer than the situation allows before it changes. Warm practical light rakes across the patterned surfaces at a shallow angle so the motifs read in relief, 3:1; a cool window note occupies no more than a fifth of the frame. Palette burgundy, olive, mustard gold, walnut. Keep the same face, garment, patterns, and light. Avoid: handheld shake, flat grey walls, minimalist set, moire, tiny repeating micro-pattern, lens flare, modern office lighting, shallow depth of field.
 ```
 
-Keyframe / still prompt（英文，用于 Step 8，接图像模型）：
+Keyframe / still prompt（英文，用于 Step 10，接图像模型）：
 
 ```text
 Frontal, perfectly symmetrical medium frame, 40mm equivalent, camera at chest height, subject dead centre. Three distinct large-scale patterns share the frame: <wallpaper motif> on the rear wall, <embroidered or printed fabric> on the furniture, <tile or carved wood> in the foreground; smallest repeat is large, no fine micro-texture. Medium depth of field, f/5.6, all patterns sharp and readable. One element sits deliberately off-axis to break the symmetry: <a tilted object / a single open drawer>. Warm practical lamplight rakes across the patterned wall at a shallow angle so the motif stands out in relief, ratio 3:1; a cool window at frame edge occupies under a fifth of the image. Palette burgundy, olive green, mustard gold, walnut brown, with one accent of <blood red / jade green> that matches an object already in frame. Mid-high saturation, mid contrast, warm not clinical. Expression composed and courteous. 2.39:1. No text, no watermark, no moire, no gore, no lens flare, no minimalist grey set.
