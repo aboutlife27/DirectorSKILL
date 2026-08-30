@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Claude Skill](https://img.shields.io/badge/Claude_Skill-cinematic--director-blue)
-![Version](https://img.shields.io/badge/version-2.3.0-green)
+![Version](https://img.shields.io/badge/version-2.5.0-green)
 [![markdownlint](https://github.com/wuwangzhang1216/DirectorSKILL/actions/workflows/markdownlint.yml/badge.svg)](https://github.com/wuwangzhang1216/DirectorSKILL/actions/workflows/markdownlint.yml)
 [![links](https://github.com/wuwangzhang1216/DirectorSKILL/actions/workflows/links.yml/badge.svg)](https://github.com/wuwangzhang1216/DirectorSKILL/actions/workflows/links.yml)
 
@@ -25,7 +25,9 @@ This skill replaces adjective soup with **directorial reasoning**:
 - **Failures get diagnosed, not re-rolled.** Nineteen coded failure modes, each with its mechanism, its ranked causes, and the cheapest fix that addresses it.
 - **Style is a lens**, not a costume. Choosing Kubrick means wide-angle one-point perspective pressing people into architecture — not "add a zoom."
 
-## What's new in 2.3
+## What's new in 2.5
+
+> **2.5 narrative knowledge foundation:** Complete novels and screenplays now pass a mandatory Knowledge Ready gate before character, location, prop, or storyboard production. The workflow verifies source hashes and reliable scope, builds searchable evidence plus a relationship graph, initializes durable memory, and defines write-back and invalidation triggers. See [`references/narrative-knowledge-workflow.md`](references/narrative-knowledge-workflow.md).
 
 > **2.3 本地制片控制内核：** 新增由 Codex 驱动的制片控制模式 K、SQLite 执行账本、内容寻址媒体仓库、四个人工审批门、任务租约恢复、候选版本与失效传播。第一版不直连供应商，Codex 通过 JSON 命令领取任务、调用模型并回填结果。入口见 [`references/production-control-plane.md`](references/production-control-plane.md) 和 [`assets/production-plan-template.json`](assets/production-plan-template.json)。
 
@@ -33,14 +35,14 @@ This skill replaces adjective soup with **directorial reasoning**:
 
 v1 knew the vocabulary of directing. v2 knows the craft behind it.
 
-| | v1.2 | v2.3 |
+| | v1.2 | v2.5 |
 |---|---|---|
-| Directing pipeline | 10 steps | 15 steps — adds intake/scope, a film visual constitution, automatic visual direction, sound/dialogue, and edit/assembly |
+| Directing pipeline | 10 steps | 16 steps — adds a knowledge foundation, intake/scope, a film visual constitution, automatic visual direction, sound/dialogue, and edit/assembly |
 | Feature-production loop | — | 11 gated stages from evidence and capacity through master/QC |
 | Output modes | 6 | 11 — adds beat sheet, director's book, sound plan, edit plan, production control |
-| Top-level reference files | 4 | 19 |
+| Top-level reference files | 4 | 20 |
 | Director lenses | 14 | 20 |
-| Assets and templates | 4 | 12, including worked examples and machine-readable contracts |
+| Assets and templates | 4 | 13, including worked examples and machine-readable contracts |
 | Context strategy | load everything | routing table — `SKILL.md` stays lean, depth loads on demand |
 | Tool handling | six named adapters | capability-first routing + four prompt shapes + twelve adapter families |
 | Failure handling | a checklist | coded manual F1–F19, cost ladder, three-strike rule |
@@ -285,7 +287,7 @@ The MIT grant covers the skill files. The usage rule above governs *how* you app
 
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Skill](https://img.shields.io/badge/Claude_Skill-cinematic--director-blue)
-![版本](https://img.shields.io/badge/version-2.3.0-green)
+![版本](https://img.shields.io/badge/version-2.5.0-green)
 [![lint](https://github.com/wuwangzhang1216/DirectorSKILL/actions/workflows/markdownlint.yml/badge.svg)](https://github.com/wuwangzhang1216/DirectorSKILL/actions/workflows/markdownlint.yml)
 [![link check](https://github.com/wuwangzhang1216/DirectorSKILL/actions/workflows/links.yml/badge.svg)](https://github.com/wuwangzhang1216/DirectorSKILL/actions/workflows/links.yml)
 
@@ -304,7 +306,11 @@ The MIT grant covers the skill files. The usage rule above governs *how* you app
 - **失败要诊断，不要重摇**。19 个编码失败模式，每个都有机制、按概率排序的成因和成本最低的有效修复。
 - **风格是镜头，不是外套**。选库布里克意味着用广角单点透视把人压进建筑——不是"多加个推镜"。
 
-## 2.4 有什么新东西
+## 2.5 有什么新东西
+
+2.5 新增长篇叙事 Knowledge Ready 强制门禁：完整小说或剧本先完成来源哈希、可靠范围隔离、全文证据库、关系图和长期记忆，再进入角色、场景、道具和分镜资产生产。用户只制作第一章时，知识底座仍覆盖全书，生成任务图才限制在第一章。批准资产、视觉决定和验收镜头持续写回，并使冲突下游失效。入口见 [`references/narrative-knowledge-workflow.md`](references/narrative-knowledge-workflow.md)。
+
+## 2.4
 
 2.4 新增可验证的长篇来源继承工作流：以只读 SQLite 快照导入章节正文和五类候选资产，使用内容哈希、原子发布、离线复验与 L0–L3 分层隔离来源事实、旧系统推论和改编正史。小说正文与私有媒体不会进入公开仓库。
 
@@ -316,14 +322,14 @@ The MIT grant covers the skill files. The usage rule above governs *how* you app
 
 v1 掌握的是导演的词汇，v2 掌握的是词汇背后的手艺。
 
-| | v1.2 | v2.3 |
+| | v1.2 | v2.5 |
 |---|---|---|
-| 导演流水线 | 10 步 | 15 步——新增需求梳理、全片视觉宪法、自动视觉导演、声音与对白、剪辑与合成 |
+| 导演流水线 | 10 步 | 16 步——新增知识底座、需求梳理、全片视觉宪法、自动视觉导演、声音与对白、剪辑与合成 |
 | 长片生产闭环 | — | 11 个带阶段门的阶段，从证据与容量到母版/QC |
 | 输出模式 | 6 种 | 11 种——新增节拍表、导演书、声音方案、剪辑方案、制片控制 |
-| 顶层参考文件 | 4 个 | 19 个 |
+| 顶层参考文件 | 4 个 | 20 个 |
 | 导演风格 | 14 位 | 20 位 |
-| 资产与模板 | 4 个 | 12 个，包含实例与机器可读契约 |
+| 资产与模板 | 4 个 | 13 个，包含实例与机器可读契约 |
 | 上下文策略 | 全量加载 | 路由表——`SKILL.md` 保持精简，深度按需加载 |
 | 工具处理 | 6 个具名适配器 | 能力优先路由 + 4 种提示词形态 + 12 个适配器家族 |
 | 失败处理 | 一张清单 | 编码手册 F1–F19、成本阶梯、三振规则 |

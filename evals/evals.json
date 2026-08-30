@@ -1,6 +1,6 @@
 {
   "skill_name": "cinematic-director",
-  "version": "2.3.0",
+  "version": "2.5.0",
   "notes": "Behavior contract for the cinematic-director skill. Each case carries `mode` (the A-K output mode the request should trigger), `loads` (repo-relative reference/asset files the response should have consulted), and `assertions` (4-6 independently checkable claims about the response text, never about hidden reasoning). Every style-overlay case includes a copyright-safety assertion.",
   "evals": [
     {
@@ -653,6 +653,26 @@
         "模型按任务能力和输出合同选择，不把控制内核绑定到单一供应商。",
         "说明上游接受版本变化会使审批门和下游任务失效，并用 retry 重算。",
         "说明中断后先 recover，只有四门与所有任务完成后才能 export。"
+      ]
+    },
+    {
+      "id": "long-form-knowledge-foundation",
+      "mode": "K",
+      "loads": [
+        "references/narrative-knowledge-workflow.md",
+        "references/source-ingestion-workflow.md",
+        "references/film-consistency-system.md",
+        "assets/production-plan-template.json"
+      ],
+      "prompt": "我有一整部长篇小说，但现在只想先生成第一章的角色资产和五个短镜头。请直接启动制片准备，并保证后面数百章再出现的人物、密室、座位和可变形圆桌不会失真。",
+      "expected_output": "先对完整小说建立带来源哈希、可靠范围、实体证据、关系图与长期记忆的知识底座，通过 Knowledge Ready 后，才把生成任务图限制到第一章；后续批准决定持续写回并使冲突下游失效。",
+      "assertions": [
+        "完整作品先登记和建库，不能因为当前只生成第一章而只读第一章。",
+        "原文证据、候选推断、批准正史和长期决定分层保存，任何关系都可追溯到来源。",
+        "Knowledge Ready 至少验证来源哈希、可靠范围隔离、全文检索、核心实体、关系图遍历、长期记忆健康度和数据库完整性。",
+        "角色、复现密室、固定座位、开局姿态和可变形圆桌在资产生成前通过跨篇查询汇总约束。",
+        "当前生成任务图只覆盖第一章和五个短镜头，但知识底座覆盖完整作品。",
+        "原文修订、实体消歧、资产批准、视觉决定和镜头验收均触发带来源的写回、影响面检查与下游失效。"
       ]
     }
   ]

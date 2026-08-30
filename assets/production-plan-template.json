@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "project": {
     "id": "feature-template",
     "title": "未命名长片"
@@ -7,10 +7,25 @@
   "continuity_state": "project-state.json",
   "tasks": [
     {
+      "id": "knowledge-foundation",
+      "kind": "narrative_knowledge_foundation",
+      "stage": "development",
+      "depends_on": [],
+      "required_gate": null,
+      "inputs": {
+        "artifacts": ["complete-script-or-novel", "source-manifest"],
+        "checks": ["source-hashes", "stable-ids", "reliable-scope", "search", "entity", "related", "memory-doctor"]
+      },
+      "output_contract": {
+        "media_type": "application/json",
+        "purpose": "全量原文证据库、关系图、长期记忆状态与 Knowledge Ready 验收报告"
+      }
+    },
+    {
       "id": "visual-constitution",
       "kind": "visual_constitution",
       "stage": "development",
-      "depends_on": [],
+      "depends_on": ["knowledge-foundation"],
       "required_gate": null,
       "inputs": {"artifacts": ["script"]},
       "output_contract": {"media_type": "application/json", "purpose": "项目视觉宪法与全片视觉弧"}
@@ -116,7 +131,7 @@
     }
   ],
   "gates": [
-    {"id": "visual_constitution", "evidence_tasks": ["visual-constitution"]},
+    {"id": "visual_constitution", "evidence_tasks": ["knowledge-foundation", "visual-constitution"]},
     {"id": "core_assets", "evidence_tasks": ["core-assets-manifest"]},
     {"id": "pilot_shots", "evidence_tasks": ["pilot-report"]},
     {"id": "picture_lock", "evidence_tasks": ["rough-cut"]}

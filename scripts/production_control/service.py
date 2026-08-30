@@ -20,6 +20,17 @@ REQUIRED_TASK_FIELDS = {
     "inputs",
     "output_contract",
 }
+KNOWLEDGE_READY_VALIDATOR = "cinematic-director/narrative-knowledge-base@1"
+KNOWLEDGE_READY_CHECKS = {
+    "source_hashes",
+    "stable_ids",
+    "reliable_scope_isolated",
+    "search",
+    "entity",
+    "related",
+    "database_integrity",
+    "memory_health",
+}
 
 
 class ProductionService:
@@ -228,6 +239,9 @@ class ProductionService:
                 )
             raise ProductionError("任务输入已经变化，请重新领取", "stale_input")
 
+        if task["kind"] == "narrative_knowledge_foundation":
+            self._validate_knowledge_ready_report(artifact_path, task)
+
         contract = json.loads(row["output_contract_json"])
         artifact = import_artifact(self.project_dir, artifact_path, contract.get("media_type"))
         stale_input = False
@@ -271,6 +285,427 @@ class ProductionService:
         if stale_input:
             raise ProductionError("任务输入已经变化，请重新领取", "stale_input")
         return {"candidate_id": candidate_id, **artifact}
+
+    def _project_artifact(self, relative_path):
+        if not isinstance(relative_path, str) or not relative_path.strip():
+            raise ValueError("资产路径必须是非空字符串")
+        relative = Path(relative_path)
+        if relative.is_absolute() or ".." in relative.parts:
+            raise ValueError("资产路径必须位于项目目录内")
+        candidate = self.project_dir / relative
+        current = self.project_dir
+        for part in relative.parts:
+            current = current / part
+            if current.is_symlink():
+                raise ValueError(f"Knowledge Ready 资产不得使用符号链接：{relative_path}")
+        resolved = candidate.resolve(strict=False)
+        if not resolved.is_relative_to(self.project_dir) or not resolved.is_file():
+            raise ValueError(f"Knowledge Ready 资产不存在：{relative_path}")
+        return resolved
+
+    @staticmethod
+    def _sqlite_integrity(path):
+        with sqlite3.connect(f"file:{path}?mode=ro", uri=True) as connection:
+            row = connection.execute("PRAGMA integrity_check").fetchone()
+            if row is None or row[0] != "ok":
+                raise ValueError(f"SQLite 完整性检查失败：{path.name}")
+
+    @staticmethod
+    def _canonical_sha256(value):
+        payload = json.dumps(
+            value, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+        ).encode("utf-8")
+        return hashlib.sha256(payload).hexdigest()
+
+    @staticmethod
+    def _semantic_chapter_content(content):
+        lines = content.splitlines()
+        if lines and lines[0].startswith("<!-- ") and lines[0].endswith(" -->"):
+            lines = lines[2:] if len(lines) > 1 and not lines[1].strip() else lines[1:]
+            content = "\n".join(lines)
+        return content.rstrip()
+
+    def _validate_source_binding(
+        self, source_manifest, knowledge_db, corpus_sha256, reliable_end
+    ):
+        chapters = source_manifest.get("chapters")
+        snapshot_path = source_manifest.get("snapshot_path")
+        if not isinstance(chapters, list) or not chapters or not isinstance(snapshot_path, str):
+            raise ValueError("来源清单缺少完整章节或快照路径")
+        corpus_records = [
+            {
+                key: chapter.get(key)
+                for key in (
+                    "stable_id",
+                    "source_episode_id",
+                    "episode_number",
+                    "original_title",
+                    "content_sha256",
+                )
+            }
+            for chapter in chapters
+        ]
+        if self._canonical_sha256(corpus_records) != corpus_sha256:
+            raise ValueError("来源清单章节元数据无法重建报告语料哈希")
+
+        source_rows = {}
+        for chapter in chapters:
+            chapter_id = chapter.get("stable_id")
+            ordinal = chapter.get("episode_number")
+            relative_file = chapter.get("file")
+            if not isinstance(chapter_id, str) or not isinstance(ordinal, int):
+                raise ValueError("来源清单章节缺少稳定 ID 或顺序")
+            combined = Path(snapshot_path) / str(relative_file)
+            source_path = self._project_artifact(combined.as_posix())
+            file_hash = sha256_file(source_path)
+            content = source_path.read_text(encoding="utf-8")
+            content_hash = hashlib.sha256(
+                self._semantic_chapter_content(content).encode("utf-8")
+            ).hexdigest()
+            if (
+                file_hash != chapter.get("file_sha256")
+                or content_hash != chapter.get("content_sha256")
+            ):
+                raise ValueError(f"来源章节哈希不一致：{chapter_id}")
+            if chapter_id in source_rows:
+                raise ValueError(f"来源章节稳定 ID 重复：{chapter_id}")
+            source_rows[chapter_id] = {
+                "ordinal": ordinal,
+                "title": chapter.get("original_title") or chapter_id,
+                "source_file": source_path.relative_to(self.project_dir).as_posix(),
+                "file_sha256": file_hash,
+                "content_sha256": chapter.get("content_sha256"),
+                "reliable": int(ordinal <= reliable_end),
+                "content": content,
+            }
+
+        with sqlite3.connect(f"file:{knowledge_db}?mode=ro", uri=True) as connection:
+            connection.row_factory = sqlite3.Row
+            database_rows = {
+                row["chapter_id"]: {
+                    key: row[key]
+                    for key in (
+                        "ordinal",
+                        "title",
+                        "source_file",
+                        "file_sha256",
+                        "content_sha256",
+                        "reliable",
+                        "content",
+                    )
+                }
+                for row in connection.execute(
+                    "SELECT chapter_id, ordinal, title, source_file, file_sha256, "
+                    "content_sha256, reliable, content FROM chapters"
+                )
+            }
+            if database_rows != source_rows:
+                raise ValueError("知识库章节内容并非由当前来源清单重建")
+            fts_count = connection.execute("SELECT COUNT(*) FROM chapter_fts").fetchone()[0]
+            if fts_count != len(source_rows):
+                raise ValueError("全文搜索索引与来源章节数量不一致")
+            aliases = {}
+            for entity_id, canonical_name in connection.execute(
+                "SELECT entity_id, canonical_name FROM entities"
+            ):
+                aliases[entity_id] = [canonical_name]
+            for entity_id, alias in connection.execute(
+                "SELECT entity_id, alias FROM entity_aliases"
+            ):
+                aliases.setdefault(entity_id, []).append(alias)
+            mention_rows = connection.execute(
+                "SELECT entity_id, chapter_id, mention_count, first_offset, confidence "
+                "FROM mentions"
+            ).fetchall()
+            for mention in mention_rows:
+                content = source_rows[mention["chapter_id"]]["content"]
+                matches = [
+                    (content.count(term), content.find(term))
+                    for term in aliases.get(mention["entity_id"], [])
+                    if len(term) >= 2 and term in content
+                ]
+                if (
+                    not matches
+                    or (mention["mention_count"], mention["first_offset"]) not in matches
+                    or mention["confidence"] not in {"EXTRACTED", "INFERRED", "AMBIGUOUS"}
+                ):
+                    raise ValueError("实体证据无法从来源章节复现")
+
+    @staticmethod
+    def _validate_graph_binding(graph, knowledge_db):
+        with sqlite3.connect(f"file:{knowledge_db}?mode=ro", uri=True) as connection:
+            reliable_chapters = {
+                f"chapter:{row[0]}": {
+                    "label": f"{row[0]} {row[1]}",
+                    "file_type": "document",
+                    "node_kind": "chapter",
+                    "source_file": row[2],
+                    "source_location": row[0],
+                    "status": None,
+                }
+                for row in connection.execute(
+                    "SELECT chapter_id, title, source_file FROM chapters WHERE reliable = 1"
+                )
+            }
+            active_entities = {
+                row[0]
+                for row in connection.execute(
+                    "SELECT DISTINCT m.entity_id FROM mentions m "
+                    "JOIN chapters c USING(chapter_id) WHERE c.reliable = 1 "
+                    "UNION SELECT entity_id FROM document_mentions "
+                    "UNION SELECT entity_id FROM entities "
+                    "WHERE source_file LIKE 'development/series-bible/%'"
+                )
+            }
+            entity_nodes = {
+                row[0]: {
+                    "label": row[2],
+                    "file_type": "concept",
+                    "node_kind": row[1],
+                    "source_file": row[4],
+                    "source_location": row[5],
+                    "status": row[3],
+                }
+                for row in connection.execute(
+                    "SELECT entity_id, entity_type, canonical_name, status, source_file, "
+                    "source_record_sha256 FROM entities"
+                )
+                if row[0] in active_entities
+            }
+            document_nodes = {
+                row[0]: {
+                    "label": row[1],
+                    "file_type": "document",
+                    "node_kind": "series_bible",
+                    "source_file": row[2],
+                    "source_location": None,
+                    "status": None,
+                }
+                for row in connection.execute(
+                    "SELECT document_id, title, source_file FROM documents"
+                )
+            }
+            expected_nodes = {**reliable_chapters, **entity_nodes, **document_nodes}
+            expected_edges = set()
+            for row in connection.execute(
+                "SELECT m.entity_id, m.chapter_id, m.confidence, m.mention_count, "
+                "c.source_file, m.first_offset FROM mentions m "
+                "JOIN chapters c USING(chapter_id) WHERE c.reliable = 1"
+            ):
+                expected_edges.add(
+                    (
+                        tuple(sorted((row[0], f"chapter:{row[1]}"))),
+                        "mentioned_in",
+                        row[2],
+                        1.0 if row[2] == "EXTRACTED" else 0.55,
+                        row[3],
+                        row[4],
+                        str(row[5]),
+                    )
+                )
+            for row in connection.execute(
+                "SELECT dm.entity_id, dm.document_id, dm.confidence, dm.mention_count, "
+                "d.source_file FROM document_mentions dm "
+                "JOIN documents d USING(document_id)"
+            ):
+                expected_edges.add(
+                    (
+                        tuple(sorted((row[0], row[1]))),
+                        "documented_in",
+                        row[2],
+                        1.0 if row[2] == "EXTRACTED" else 0.55,
+                        row[3],
+                        row[4],
+                        None,
+                    )
+                )
+
+        nodes = graph.get("nodes") if isinstance(graph, dict) else None
+        links = graph.get("links") if isinstance(graph, dict) else None
+        if not isinstance(nodes, list) or not isinstance(links, list):
+            raise ValueError("知识图谱节点或关系结构无效")
+        semantic_keys = (
+            "label",
+            "file_type",
+            "node_kind",
+            "source_file",
+            "source_location",
+            "status",
+        )
+        actual_nodes = {
+            node.get("id"): {key: node.get(key) for key in semantic_keys}
+            for node in nodes
+            if isinstance(node, dict) and node.get("id")
+        }
+        if len(actual_nodes) != len(nodes) or actual_nodes != expected_nodes:
+            raise ValueError("知识图谱节点身份属性与知识库证据不一致")
+        actual_edges = {
+            (
+                tuple(sorted((link.get("source"), link.get("target")))),
+                link.get("relation"),
+                link.get("confidence"),
+                link.get("confidence_score"),
+                link.get("weight"),
+                link.get("source_file"),
+                link.get("source_location"),
+            )
+            for link in links
+            if isinstance(link, dict)
+            and isinstance(link.get("source"), str)
+            and isinstance(link.get("target"), str)
+        }
+        if len(actual_edges) != len(links) or actual_edges != expected_edges:
+            raise ValueError("知识图谱关系无法由知识库证据重建")
+
+    def _validate_knowledge_ready_report(self, report_path, task):
+        try:
+            raw_report = Path(report_path)
+            if raw_report.is_symlink():
+                raise ValueError("Knowledge Ready 报告不得使用符号链接")
+            for parent in raw_report.absolute().parents:
+                if parent.resolve(strict=False) == self.project_dir:
+                    break
+                if parent.is_symlink() and parent.resolve(strict=False).is_relative_to(
+                    self.project_dir
+                ):
+                    raise ValueError("Knowledge Ready 报告不得位于符号链接目录")
+            resolved_report = raw_report.resolve(strict=True)
+            if not resolved_report.is_relative_to(self.project_dir):
+                raise ValueError("Knowledge Ready 报告必须位于项目目录内")
+            report_relative = resolved_report.relative_to(self.project_dir)
+            report_file = self._project_artifact(report_relative.as_posix())
+            report = json.loads(report_file.read_text(encoding="utf-8"))
+            if not isinstance(report, dict):
+                raise ValueError("报告根节点必须是对象")
+            if report.get("validator") != KNOWLEDGE_READY_VALIDATOR:
+                raise ValueError("报告验证器标识无效")
+            if report.get("status") != "ready":
+                raise ValueError("知识底座尚未就绪")
+            checks = report.get("checks")
+            if not isinstance(checks, dict) or any(
+                checks.get(name) is not True for name in KNOWLEDGE_READY_CHECKS
+            ):
+                raise ValueError("报告检查项未全部通过")
+            corpus_sha256 = report.get("corpus_sha256")
+            reliable_end = report.get("reliable_end")
+            if (
+                not isinstance(corpus_sha256, str)
+                or len(corpus_sha256) != 64
+                or any(character not in "0123456789abcdef" for character in corpus_sha256)
+                or not isinstance(reliable_end, int)
+                or reliable_end < 1
+            ):
+                raise ValueError("报告语料哈希或可靠范围无效")
+            input_ids = json.loads(task["inputs_json"]).get("artifacts", [])
+            if "source-manifest" not in input_ids:
+                raise ValueError("知识底座任务未绑定来源清单")
+            with self.store.connect() as connection:
+                manifest_artifact = connection.execute(
+                    "SELECT object_path FROM input_artifacts WHERE id = 'source-manifest'"
+                ).fetchone()
+            if manifest_artifact is None:
+                raise ValueError("来源清单输入不存在")
+            manifest_path = self._project_artifact(manifest_artifact["object_path"])
+            source_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            if (
+                not isinstance(source_manifest, dict)
+                or source_manifest.get("corpus_sha256") != corpus_sha256
+            ):
+                raise ValueError("报告语料哈希与任务来源清单不一致")
+
+            artifacts = report.get("artifacts")
+            if not isinstance(artifacts, dict):
+                raise ValueError("报告缺少资产清单")
+            verified = {}
+            expected_paths = {
+                "knowledge_db": "knowledge-base/knowledge.db",
+                "graph": "graphify-out/graph.json",
+                "memory_index": ".agent-memory/meta/index.sqlite",
+            }
+            for name, expected_path in expected_paths.items():
+                descriptor = artifacts.get(name)
+                if not isinstance(descriptor, dict):
+                    raise ValueError(f"报告缺少资产：{name}")
+                if descriptor.get("path") != expected_path:
+                    raise ValueError(f"Knowledge Ready 资产路径不符合合同：{name}")
+                path = self._project_artifact(descriptor.get("path"))
+                expected_hash = descriptor.get("sha256")
+                if not isinstance(expected_hash, str) or sha256_file(path) != expected_hash:
+                    raise ValueError(f"Knowledge Ready 资产哈希不一致：{name}")
+                verified[name] = path
+
+            knowledge_db = verified["knowledge_db"]
+            self._sqlite_integrity(knowledge_db)
+            with sqlite3.connect(f"file:{knowledge_db}?mode=ro", uri=True) as connection:
+                metadata = {
+                    key: json.loads(value)
+                    for key, value in connection.execute("SELECT key, value FROM metadata")
+                }
+                if metadata.get("corpus_sha256") != corpus_sha256:
+                    raise ValueError("报告与知识库语料哈希不一致")
+                if metadata.get("reliable_end") != reliable_end:
+                    raise ValueError("报告与知识库可靠范围不一致")
+                reliable_ids = {
+                    row[0]
+                    for row in connection.execute(
+                        "SELECT chapter_id FROM chapters WHERE reliable = 1"
+                    )
+                }
+                entity_count = connection.execute("SELECT COUNT(*) FROM entities").fetchone()[0]
+                mention_count = connection.execute(
+                    "SELECT COUNT(*) FROM mentions m JOIN chapters c USING(chapter_id) "
+                    "WHERE c.reliable = 1"
+                ).fetchone()[0]
+            if not reliable_ids or entity_count < 1 or mention_count < 1:
+                raise ValueError("知识库缺少可用章节、实体或可靠证据")
+            self._validate_source_binding(
+                source_manifest, knowledge_db, corpus_sha256, reliable_end
+            )
+
+            graph = json.loads(verified["graph"].read_text(encoding="utf-8"))
+            nodes = graph.get("nodes") if isinstance(graph, dict) else None
+            links = graph.get("links") if isinstance(graph, dict) else None
+            if not isinstance(nodes, list) or not nodes or not isinstance(links, list) or not links:
+                raise ValueError("知识图谱没有可遍历节点或关系")
+            node_ids = [node.get("id") for node in nodes if isinstance(node, dict)]
+            if (
+                len(node_ids) != len(nodes)
+                or any(not isinstance(node_id, str) or not node_id for node_id in node_ids)
+                or len(set(node_ids)) != len(node_ids)
+            ):
+                raise ValueError("知识图谱节点 ID 不稳定或重复")
+            node_id_set = set(node_ids)
+            for link in links:
+                if (
+                    not isinstance(link, dict)
+                    or link.get("source") not in node_id_set
+                    or link.get("target") not in node_id_set
+                ):
+                    raise ValueError("知识图谱存在悬空关系")
+            graph_chapters = {
+                node.get("id", "").removeprefix("chapter:")
+                for node in nodes
+                if isinstance(node, dict) and node.get("node_kind") == "chapter"
+            }
+            if not graph_chapters or not graph_chapters.issubset(reliable_ids):
+                raise ValueError("知识图谱包含隔离范围或缺少可靠章节")
+            self._validate_graph_binding(graph, knowledge_db)
+
+            memory_index = verified["memory_index"]
+            self._sqlite_integrity(memory_index)
+            with sqlite3.connect(f"file:{memory_index}?mode=ro", uri=True) as connection:
+                memory_tables = {
+                    row[0]
+                    for row in connection.execute(
+                        "SELECT name FROM sqlite_master WHERE type = 'table'"
+                    )
+                }
+            if not memory_tables.intersection({"memory_docs", "memory_sections"}):
+                raise ValueError("长期记忆索引结构无效")
+        except (OSError, ValueError, json.JSONDecodeError, sqlite3.Error) as exc:
+            raise ProductionError(
+                f"Knowledge Ready 语义校验失败：{exc}", "invalid_knowledge_ready"
+            ) from exc
 
     def review_candidate(self, candidate_id, decision, reviewer, notes=""):
         if decision not in {"approve", "reject"}:

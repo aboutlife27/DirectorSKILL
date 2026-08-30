@@ -64,19 +64,19 @@ daily_metrics:
 
 stages:
   - id: S00
-    name: 证据与交付契约
+    name: 叙事知识、证据与交付契约
     trigger: 收到长片剧本或制作目标。
-    decision: 定义交付等级并用代表场景验证真实容量。
-    constraints: [生成窗口不等于端到端周期, 宣传数字不得替代本项目实验]
-    actions: [登记事实与假设, 选择三类代表场景, 执行端到端容量实验]
-    observations: [可用率, 锁镜耗时, 返工次数, 粗剪可用性]
-    rollback: 降低镜头数、动作复杂度、口型要求或交付等级后重估。
-    gate: 代表场景可剪且估算产能覆盖交付范围。
-    artifacts: [delivery-contract, evidence-register, risk-register, capacity-baseline]
+    decision: 先建立完整作品级可追溯知识底座，再定义交付等级并用代表场景验证真实容量。
+    constraints: [完整来源先于局部资产, 隔离语料不进入默认决策, 生成窗口不等于端到端周期, 宣传数字不得替代本项目实验]
+    actions: [校验全量来源哈希与稳定 ID, 构建检索库和关系图, 初始化长期记忆, 执行关键查询与完整性检查, 登记事实与假设, 选择三类代表场景, 执行端到端容量实验]
+    observations: [来源完整率, 可靠范围隔离, 关键实体命中, 图谱可遍历性, 记忆健康度, 可用率, 锁镜耗时, 返工次数, 粗剪可用性]
+    rollback: 知识验证失败则停止资产生产并修复来源、索引或实体；容量不足则降低镜头数、动作复杂度、口型要求或交付等级后重估。
+    gate: Knowledge Ready 验收通过，代表场景可剪且估算产能覆盖交付范围。
+    artifacts: [source-manifest, knowledge-database, relationship-graph, durable-memory-status, knowledge-ready-report, delivery-contract, evidence-register, risk-register, capacity-baseline]
 
   - id: S01
     name: 剧本编译与视觉宪法
-    trigger: S00 通过。
+    trigger: S00 的 Knowledge Ready 与容量门同时通过。
     decision: 由剧情证据选择观众关系、场景原型和全片视觉弧。
     constraints: [剧情证据高于类型默认和导演姓名, 先观众关系后视觉手段]
     actions: [建立场景依赖图, 运行剧情到视觉编译器, 锁定不可变核心与弧变量]

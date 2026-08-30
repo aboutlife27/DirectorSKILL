@@ -160,6 +160,28 @@ class FeatureWorkflowAssetsTest(unittest.TestCase):
         self.assertIn("--verify-only", text)
         self.assertIn("import_status: candidate", text)
 
+    def test_long_form_workflow_requires_knowledge_and_memory_gate_before_assets(self):
+        skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+        workflow = ROOT / "references" / "narrative-knowledge-workflow.md"
+
+        self.assertTrue(workflow.is_file())
+        self.assertIn("references/narrative-knowledge-workflow.md", skill)
+        self.assertIn("### 0. Narrative knowledge and memory foundation", skill)
+        self.assertIn("知识底座未通过门禁时，不得进入角色、场景、道具或分镜资产生成", skill)
+        text = workflow.read_text(encoding="utf-8")
+        for heading in (
+            "## 道：一部作品只能有一套可追溯事实",
+            "## 法：四层知识与记忆协议",
+            "## 术：建立、查询、写回、失效循环",
+            "## 门禁：Knowledge Ready",
+            "## 更新触发器",
+            "## 器：本地调用合同",
+        ):
+            self.assertIn(heading, text)
+        for command in (" build ", " search ", " entity ", " related "):
+            self.assertIn(command, text)
+        self.assertIn("agent-memory", text)
+
     def test_all_director_templates_use_current_pipeline_steps(self):
         style_files = sorted((ROOT / "references" / "director_styles").glob("[0-9][0-9]_*.md"))
         self.assertEqual(20, len(style_files))
@@ -176,14 +198,23 @@ class FeatureWorkflowAssetsTest(unittest.TestCase):
         data = json.loads((ROOT / "evals" / "evals.json").read_text(encoding="utf-8"))
         ids = {case["id"] for case in data["evals"]}
 
-        self.assertEqual("2.3.0", data["version"])
+        self.assertEqual("2.5.0", data["version"])
         self.assertIn("hell-grind-workflow-audit", ids)
         self.assertIn("feature-film-production-runbook", ids)
         self.assertIn("codex-production-control", ids)
+        self.assertIn("long-form-knowledge-foundation", ids)
         cases = {case["id"]: case for case in data["evals"]}
         self.assertEqual(["references/hell-grind-workflow.md"], cases["hell-grind-workflow-audit"]["loads"])
         self.assertIn("assets/ai-feature-production-runbook.yaml", cases["feature-film-production-runbook"]["loads"])
-        for case_id in ("hell-grind-workflow-audit", "feature-film-production-runbook"):
+        self.assertIn(
+            "references/narrative-knowledge-workflow.md",
+            cases["long-form-knowledge-foundation"]["loads"],
+        )
+        for case_id in (
+            "hell-grind-workflow-audit",
+            "feature-film-production-runbook",
+            "long-form-knowledge-foundation",
+        ):
             self.assertTrue(cases[case_id]["prompt"])
             self.assertTrue(cases[case_id]["expected_output"])
             self.assertGreaterEqual(len(cases[case_id]["assertions"]), 6)

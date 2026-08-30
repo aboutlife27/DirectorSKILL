@@ -51,6 +51,7 @@ The enemy is adjective soup. `cinematic, dramatic, masterpiece, 8K` tells a mode
 | 执行 AI 长片端到端生产、建立 11 阶段门或运行项目看板 | A–J | `references/ai-feature-production-playbook.md`, `assets/ai-feature-production-runbook.yaml`, `references/film-consistency-system.md`, `assets/project-state-template.json` |
 | “一键制片”、制片管理、分级自动化、由 Codex 调用模型并持续执行 | K | `references/production-control-plane.md`, `assets/production-plan-template.json`, `references/ai-feature-production-playbook.md` |
 | 从旧项目继承小说、迁移长篇来源、导入 Huobao 数据或建立可追溯素材底座 | K | `references/source-ingestion-workflow.md`, `references/production-control-plane.md` |
+| 从完整剧本/小说开项、建立知识图谱、长期记忆、跨章节检索或追溯 | K | `references/narrative-knowledge-workflow.md`, `references/source-ingestion-workflow.md`, `references/film-consistency-system.md` |
 | Explain or extend the directing methods and research basis | any | `references/method-provenance.md` |
 | "In the style of \<director\>" | any | `references/director_styles/NN_<slug>.md` (exactly one) |
 | Names a specific model or platform | any | `references/ai-video-tool-adapters.md` or `references/image-model-adapters.md` |
@@ -61,7 +62,7 @@ The enemy is adjective soup. `cinematic, dramatic, masterpiece, 8K` tells a mode
 
 Modes combine, and Mode J is rarely terminal: a repair that lands on re-planning the shot produces new shots, so chain J→F for the prompts, →I for the cut, and →G once more than two shots share invariants.
 
-A full narrative pass runs the steps in order: 1 intake · 2 director read (A) · 3 beats (B) · 4 film constitution · 5 automatic visual decision · 6 optional style reference · 7 director's book (C) · 8 blocking · 9 shots (D) · 10 keyframes (E) · 11 adapter · 12 prompts (F) · 13 sound (H) · 14 edit (I) · 15 QC and state write-back (J), with G running underneath. Steps 4, 5, 11, and 15 are the commonly skipped control points — do not skip them on multi-scene work.
+A full narrative pass runs the steps in order: 0 knowledge and memory foundation · 1 intake · 2 director read (A) · 3 beats (B) · 4 film constitution · 5 automatic visual decision · 6 optional style reference · 7 director's book (C) · 8 blocking · 9 shots (D) · 10 keyframes (E) · 11 adapter · 12 prompts (F) · 13 sound (H) · 14 edit (I) · 15 QC and state write-back (J), with G running underneath. Steps 0, 4, 5, 11, and 15 are the commonly skipped control points — do not skip them on multi-scene work.
 
 长片端到端执行时，上述叙事流程必须嵌入 `references/ai-feature-production-playbook.md` 的阶段门：先用证据与容量实验锁定交付，再建立资产和一致性正史；之后按首镜证明、单变量生成、并行剪辑、画面锁定、清理、调色和验收闭环推进。阶段 0-5 是集中生成窗口的前置门，两周生成日历从阶段 6 开始；不要把生成窗口误写为完整制作周期，也不要把前期工作重新塞进这两周。
 
@@ -71,9 +72,9 @@ A full narrative pass runs the steps in order: 1 intake · 2 director read (A) �
 
 固定闭环如下：
 
-1. 从 `assets/production-plan-template.json` 复制并按剧本编译项目任务图。
-2. 初始化项目并登记剧本、视觉参考和已有资产。
-3. 导入计划后领取一个任务包；根据任务的 `kind`、输入引用和输出合同选择模型。
+1. 初始化项目并登记完整剧本/小说、视觉参考和已有资产；按 `references/narrative-knowledge-workflow.md` 通过 Knowledge Ready 门禁。
+2. 从 `assets/production-plan-template.json` 复制并按知识库中的正史、证据和依赖编译项目任务图。
+3. 导入计划后领取一个任务包；生成前查询相关实体、关系、连续性决定和当前接受版本，再根据任务的 `kind`、输入引用和输出合同选择模型。
 4. 调用模型后回填候选文件及 `model`、`prompt`、`seed` 和关键参数。
 5. 在同一审批门区间内可自动做技术 QC、拒绝和重试；每次主要只改一个变量。
 6. 到视觉宪法、核心资产、样片镜头或画面锁定时停止，把证据与候选交给用户。Codex 不能代替用户批准这四个门。
@@ -98,7 +99,7 @@ python3 scripts/production_control_cli.py export <project>
 
 ### 来源继承
 
-当项目从小说库、旧制片工具或 Huobao 迁入时，先执行 `references/source-ingestion-workflow.md`。来源继承只建立 L0 原文、L1 清单和 L2 候选，不把旧角色、场景、道具、剧本或分镜自动批准为 L3 正史。若用户限定首章、单场或少量试片，完成来源验证后只编译该范围，不生成全书任务图。
+当项目从小说库、旧制片工具或 Huobao 迁入时，先执行 `references/source-ingestion-workflow.md`，随后执行 `references/narrative-knowledge-workflow.md`。来源继承只建立 L0 原文、L1 清单和 L2 候选，不把旧角色、场景、道具、剧本或分镜自动批准为 L3 正史。若用户限定首章、单场或少量试片，仍先对完整作品建立知识底座，随后只编译指定范围的生成任务图。
 
 ### Response size
 
@@ -171,10 +172,17 @@ Defaults when unspecified:
 11. **Methods, not imitation.** Translate director names into functional methods, then keep only those supported by dramatic evidence and the visual constitution. Never mix complete style packages.
 12. **One answer by default.** Return the highest-confidence visual strategy. Ask for a choice only when the top two candidates differ by less than 10 points or a choice would break the visual constitution.
 13. **Answer the size of the question.** A prompt request gets a prompt. Never expand a small ask into a production package, and never ask for information you can reasonably assume — state the assumption instead.
+14. **Knowledge before assets.** For complete scripts, novels, series, or multi-scene projects, build and verify the evidence index, knowledge graph, and durable memory before generating assets or shots. Every approved asset and decision writes back with provenance and invalidates conflicting descendants.
 
 ## Pipeline
 
-Fifteen steps. Run only the ones the request needs, in this order. Each step names the file to load if you go deep.
+One foundation step plus fifteen directing steps. Run only the ones the request needs, in this order. Each step names the file to load if you go deep.
+
+### 0. Narrative knowledge and memory foundation
+
+For a complete script, novel, series, multi-scene project, or work expected to continue later, load `references/narrative-knowledge-workflow.md` before asset breakdown. Verify the complete source and stable IDs, build the searchable evidence base and Graphify relationship graph, initialize durable project memory, record reliable versus quarantined scope, and pass the Knowledge Ready gate.
+
+Asset and shot tasks must query this foundation before choosing identity, behavior, geography, props, blocking, palette, or camera. Approved assets and decisions write back with provenance; changed facts invalidate dependent work. 知识底座未通过门禁时，不得进入角色、场景、道具或分镜资产生成。
 
 ### 1. Intake and scope
 
