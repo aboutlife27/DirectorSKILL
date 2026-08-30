@@ -50,6 +50,7 @@ The enemy is adjective soup. `cinematic, dramatic, masterpiece, 8K` tells a mode
 | 审计《Hell Grind》公开工作流、核对其证据或解释哪些做法可迁移 | any | `references/hell-grind-workflow.md` |
 | 执行 AI 长片端到端生产、建立 11 阶段门或运行项目看板 | A–J | `references/ai-feature-production-playbook.md`, `assets/ai-feature-production-runbook.yaml`, `references/film-consistency-system.md`, `assets/project-state-template.json` |
 | “一键制片”、制片管理、分级自动化、由 Codex 调用模型并持续执行 | K | `references/production-control-plane.md`, `assets/production-plan-template.json`, `references/ai-feature-production-playbook.md` |
+| 从旧项目继承小说、迁移长篇来源、导入 Huobao 数据或建立可追溯素材底座 | K | `references/source-ingestion-workflow.md`, `references/production-control-plane.md` |
 | Explain or extend the directing methods and research basis | any | `references/method-provenance.md` |
 | "In the style of \<director\>" | any | `references/director_styles/NN_<slug>.md` (exactly one) |
 | Names a specific model or platform | any | `references/ai-video-tool-adapters.md` or `references/image-model-adapters.md` |
@@ -94,6 +95,10 @@ python3 scripts/production_control_cli.py export <project>
 ```
 
 `review approve` 表示候选进入当前接受版本，可由 Codex 按已批准标准执行；`approve-gate` 是项目方向锁定，必须有用户明确决定。`--human-confirmed` 只是记录该决定的审计声明，不是身份认证，Codex 不得自行添加。用户在门上要求修改时，使用 `retry` 重做证据任务；新版本被接受后，内核会使已批准门和下游结果失效。详细状态、输入输出与故障恢复规则见 `references/production-control-plane.md`。
+
+### 来源继承
+
+当项目从小说库、旧制片工具或 Huobao 迁入时，先执行 `references/source-ingestion-workflow.md`。来源继承只建立 L0 原文、L1 清单和 L2 候选，不把旧角色、场景、道具、剧本或分镜自动批准为 L3 正史。若用户限定首章、单场或少量试片，完成来源验证后只编译该范围，不生成全书任务图。
 
 ### Response size
 

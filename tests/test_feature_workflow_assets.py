@@ -140,6 +140,26 @@ class FeatureWorkflowAssetsTest(unittest.TestCase):
         ):
             self.assertIn(asset, readme)
 
+    def test_skill_routes_private_source_ingestion(self):
+        skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+        workflow = ROOT / "references" / "source-ingestion-workflow.md"
+
+        self.assertTrue(workflow.is_file())
+        self.assertIn("references/source-ingestion-workflow.md", skill)
+        self.assertIn("来源继承", skill)
+        text = workflow.read_text(encoding="utf-8")
+        for heading in (
+            "## 道：来源不是正史",
+            "## 法：四层来源协议",
+            "## 术：可验证导入循环",
+            "## 器：Huobao 导入命令",
+            "## 候选晋升规则",
+            "## 私有边界",
+        ):
+            self.assertIn(heading, text)
+        self.assertIn("--verify-only", text)
+        self.assertIn("import_status: candidate", text)
+
     def test_all_director_templates_use_current_pipeline_steps(self):
         style_files = sorted((ROOT / "references" / "director_styles").glob("[0-9][0-9]_*.md"))
         self.assertEqual(20, len(style_files))
