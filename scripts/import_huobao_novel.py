@@ -4,10 +4,12 @@ import datetime
 import hashlib
 import json
 import os
+import re
 import shutil
 import sqlite3
 import sys
 import tempfile
+import unicodedata
 from pathlib import Path
 
 
@@ -83,6 +85,57 @@ def sha256_file(path):
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def audit_corpus_quality(chapters):
+    """识别明显抓取污染，只报警，不改写来源正文。"""
+    issues = []
+    for chapter in chapters:
+        chapter_id = chapter["stable_id"]
+        content = chapter["content"]
+        normalized = unicodedata.normalize("NFKC", content).lower()
+        compact = re.sub(r"[\W_]+", "", normalized)
+        nonempty_lines = [line for line in content.splitlines() if line.strip()]
+        sentences = [
+            re.sub(r"\s+", "", sentence)
+            for sentence in re.split(r"[。！？!?]+", normalized)
+            if len(re.sub(r"\s+", "", sentence)) >= 8
+        ]
+        duplicate_ratio = (
+            1 - len(set(sentences)) / len(sentences) if sentences else 0.0
+        )
+        metrics = {
+            "character_count": len(content),
+            "nonempty_line_count": len(nonempty_lines),
+            "sentence_count": len(sentences),
+            "duplicate_sentence_ratio": round(duplicate_ratio, 4),
+        }
+        if "hetushu" in compact or "和图书" in compact:
+            issues.append({"chapter_id": chapter_id, "code": "watermark_detected", "metrics": metrics})
+        if len(content) >= 6000 and len(nonempty_lines) <= 2:
+            issues.append({"chapter_id": chapter_id, "code": "single_line_outlier", "metrics": metrics})
+        if len(sentences) >= 20 and duplicate_ratio >= 0.25:
+            issues.append({"chapter_id": chapter_id, "code": "repeated_content", "metrics": metrics})
+    return {
+        "status": "warning" if issues else "passed",
+        "policy": "report_only_no_source_rewrite",
+        "issues": issues,
+    }
+
+
+def build_verification_report(manifest, semantic_quality, verified_at=None):
+    status = "warning" if semantic_quality["status"] == "warning" else "passed"
+    return {
+        "schema_version": "2.1",
+        "corpus_sha256": manifest["corpus_sha256"],
+        "candidate_set_sha256": manifest.get("candidate_set_sha256"),
+        "state_sha256": manifest.get("state_sha256"),
+        "verified_at": verified_at or datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "status": status,
+        "structural_status": "passed",
+        "semantic_quality": semantic_quality,
+        "checks": ["chapter_files", "compiled_novel", "candidate_exports", "semantic_quality"],
+    }
 
 
 def write_json(path, value):
@@ -345,6 +398,12 @@ def import_project(db_path, drama_id, output, expected_title=None):
         }
         corpus_records.append(corpus_record)
     corpus_sha256 = sha256_bytes(canonical_json(corpus_records))
+    semantic_quality = audit_corpus_quality(
+        [
+            {"stable_id": record["stable_id"], "content": row[3]}
+            for row, record in zip(chapters, corpus_records)
+        ]
+    )
 
     candidate_set_sha256 = sha256_bytes(canonical_json(candidate_exports))
     state_sha256 = sha256_bytes(
@@ -445,21 +504,14 @@ def import_project(db_path, drama_id, output, expected_title=None):
             },
             "chapters": chapter_manifest,
             "candidate_exports": candidate_descriptors,
+            "semantic_quality": semantic_quality,
         }
         staged_version = stage_root / version_relative
         staged_manifest = staged_version / "novel-manifest.json"
         write_json(staged_manifest, manifest)
         write_json(
             staged_version / "verification-report.json",
-            {
-                "schema_version": "2.0",
-                "corpus_sha256": corpus_sha256,
-                "candidate_set_sha256": candidate_set_sha256,
-                "state_sha256": state_sha256,
-                "verified_at": imported_at,
-                "status": "passed",
-                "checks": ["chapter_files", "compiled_novel", "candidate_exports"],
-            },
+            build_verification_report(manifest, semantic_quality, imported_at),
         )
 
         output.mkdir(parents=True, exist_ok=True)
@@ -513,6 +565,17 @@ def verify_project(output):
             if result["candidate_set_sha256"] != pointer_candidate_hash:
                 raise ImportFailure("manifest_mismatch", "verify", "当前指针与候选清单不一致")
         result["manifest_path"] = manifest_file
+        report_file = current.get(
+            "verification_report_file", "source/manifests/verification-report.json"
+        )
+        report_path = safe_join(output, report_file)
+        report_manifest = dict(manifest)
+        report_manifest["candidate_set_sha256"] = result["candidate_set_sha256"]
+        atomic_write_json(
+            report_path,
+            build_verification_report(report_manifest, result["semantic_quality"]),
+        )
+        result["verification_report_path"] = report_file
         return result
     except ImportFailure:
         raise
@@ -549,6 +612,16 @@ def _verify_manifest(output, manifest):
         path = safe_join(snapshot, chapter["file"])
         if not path.is_file() or sha256_file(path) != expected_hash:
             raise ImportFailure("hash_mismatch", "verify", f"章节文件校验失败：{stable_id}")
+
+    semantic_quality = audit_corpus_quality(
+        [
+            {
+                "stable_id": chapter["stable_id"],
+                "content": safe_join(snapshot, chapter["file"]).read_text(encoding="utf-8"),
+            }
+            for chapter in chapters
+        ]
+    )
 
     compiled_descriptor = manifest["compiled_novel"]
     if not isinstance(compiled_descriptor, dict):
@@ -608,6 +681,7 @@ def _verify_manifest(output, manifest):
         "snapshot_path": snapshot_relative,
         "candidate_files": candidate_files,
         "candidate_counts": candidate_counts,
+        "semantic_quality": semantic_quality,
     }
 
 

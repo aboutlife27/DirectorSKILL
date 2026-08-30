@@ -125,6 +125,115 @@ class HuobaoNovelImporterTests(unittest.TestCase):
         self.assertTrue((snapshot / "compiled-novel.md").is_file())
         self.assertIn("第一章正文", (snapshot / "chapters/CH0001.md").read_text(encoding="utf-8"))
 
+        report_path = self.output / "source/manifests/versions" / manifest["state_sha256"] / "verification-report.json"
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        self.assertEqual("passed", report["status"])
+        self.assertEqual("passed", report["semantic_quality"]["status"])
+
+    def test_semantic_pollution_is_reported_without_rewriting_source(self):
+        importer = load_importer()
+        repeated = "这是被重复抓取的污染句子。" * 80
+        polluted = f"hetushu.com {repeated}" + ("填充文字" * 1600)
+        db = self.root / "polluted.db"
+        create_fixture(
+            db,
+            chapters=[
+                (101, 1, "第一章", "正常正文。\n第二段。"),
+                (102, 2, "第二章", "另一章正常正文。"),
+                (103, 3, "第三章", polluted),
+            ],
+        )
+
+        result = importer.import_project(db, 2, self.root / "polluted", "测试剧")
+        manifest = json.loads(
+            ((self.root / "polluted") / result["manifest_path"]).read_text(encoding="utf-8")
+        )
+        report_path = (
+            self.root
+            / "polluted"
+            / "source/manifests/versions"
+            / manifest["state_sha256"]
+            / "verification-report.json"
+        )
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        issue_codes = {issue["code"] for issue in report["semantic_quality"]["issues"]}
+
+        self.assertEqual("warning", report["status"])
+        self.assertEqual("warning", report["semantic_quality"]["status"])
+        self.assertEqual({"watermark_detected", "single_line_outlier", "repeated_content"}, issue_codes)
+        self.assertEqual("CH0003", report["semantic_quality"]["issues"][0]["chapter_id"])
+        chapter = (
+            self.root
+            / "polluted"
+            / result["snapshot_path"]
+            / "chapters/CH0003.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("hetushu.com", chapter)
+
+    def test_verify_updates_legacy_report_path(self):
+        importer = load_importer()
+        result = importer.import_project(self.db, 2, self.output, "测试剧")
+        manifest = json.loads(
+            (self.output / result["manifest_path"]).read_text(encoding="utf-8")
+        )
+        legacy_manifest = self.output / "source/manifests/novel-manifest.json"
+        legacy_report = self.output / "source/manifests/verification-report.json"
+        legacy_manifest.write_text(
+            json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        (self.output / "source/manifests/current.json").write_text(
+            json.dumps(
+                {"schema_version": "1.0", "corpus_sha256": manifest["corpus_sha256"]},
+                ensure_ascii=False,
+                sort_keys=True,
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        legacy_report.write_text('{"status":"passed"}\n', encoding="utf-8")
+
+        verified = importer.verify_project(self.output)
+        report = json.loads(legacy_report.read_text(encoding="utf-8"))
+
+        self.assertEqual("source/manifests/verification-report.json", verified["verification_report_path"])
+        self.assertEqual("passed", report["semantic_quality"]["status"])
+
+    def test_verify_recomputes_semantic_quality_instead_of_trusting_manifest(self):
+        importer = load_importer()
+        repeated = "这是被重复抓取的污染句子。" * 80
+        polluted = f"hetushu.com {repeated}" + ("填充文字" * 1600)
+        db = self.root / "tampered-quality.db"
+        output = self.root / "tampered-quality"
+        create_fixture(
+            db,
+            chapters=[
+                (101, 1, "第一章", "正常正文。"),
+                (102, 2, "第二章", polluted),
+            ],
+        )
+        result = importer.import_project(db, 2, output, "测试剧")
+        manifest_path = output / result["manifest_path"]
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["semantic_quality"] = {
+            "status": "passed",
+            "policy": "tampered",
+            "issues": [],
+        }
+        manifest_path.write_text(
+            json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
+            encoding="utf-8",
+        )
+
+        verified = importer.verify_project(output)
+
+        self.assertEqual("warning", verified["semantic_quality"]["status"])
+        self.assertIn(
+            "watermark_detected",
+            {issue["code"] for issue in verified["semantic_quality"]["issues"]},
+        )
+
     def test_rejects_title_mismatch(self):
         importer = load_importer()
         with self.assertRaises(importer.ImportFailure) as caught:
