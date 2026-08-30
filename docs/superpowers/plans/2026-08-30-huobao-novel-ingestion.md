@@ -241,7 +241,7 @@ git grep -n -I -E '十日终焉.{200}|sk-[A-Za-z0-9_-]{16,}|api[_-]?key[[:space:
 
 确认 `git status --short` 只包含通用代码、测试、规格、计划和文档；同步安装目录后，在安装副本再次运行导入器 `--help` 与现有技能快速验证。
 
-- [ ] **步骤 4：提交并推送到个人仓库**
+- [x] **步骤 4：提交并推送到个人仓库**
 
 ```bash
 git add SKILL.md README.md CHANGELOG.md scripts/import_huobao_novel.py tests/test_import_huobao_novel.py tests/test_feature_workflow_assets.py references/source-ingestion-workflow.md docs/superpowers/specs/2026-08-30-huobao-novel-ingestion-design.md docs/superpowers/plans/2026-08-30-huobao-novel-ingestion.md
@@ -266,3 +266,4 @@ git push origin main
 - **Artifact：** 通用代码位于 `scripts/import_huobao_novel.py`；私有试片包位于 `development/episode-0001/25s-test/shot-package.md`；安装副本和交付镜像已同步。
 - **Adjustment：** 独立复核后补强路径逃逸、符号链接、候选内容校验、数据库句柄关闭、错误信息脱敏和 `current.json` 原子切换，并为同一语料的候选变化引入版本化状态。
 - **Verification：** 真实项目 `--verify-only` 通过；首章、中间章、末章正文哈希与只读源库一致；五个提示共享同一视觉锚点；交付压缩包完整可解压。
+- **Delivery：** 实现提交 `178c2c1` 已推送到 `origin/main`（`aboutlife27/DirectorSKILL`）。
